@@ -1,0 +1,57 @@
+\documentclass[letterpaper, 12pt]{artikel3}
+
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{algpseudocode}
+\usepackage{commath}
+%\usepackage{yplan}
+
+
+\usepackage{tikz}
+%\usetikzlibrary{automata, positioning}
+%\usepackage{algorithmic}
+
+\title{CSC482B Project Proposal: RNA\_LZW (title subject to change)}
+\date{\today}
+\author{TMech}
+
+\begin{document}
+\maketitle
+
+% leaving this part in as a little format guide for how latex works if you need a refresher
+
+% if you need latex tools, check out TeX Live https://www.tug.org/texlive/
+% or MiKTeX https://miktex.org/
+% there should be no difference for the simple stuff we will be doing
+
+
+%\section{Prove the language $L = \{<M> | M $ when started on the blank tape, eventually writes a \$ somewhere on the tape $\}$ is undecidable. Use the undecidability of $A_{TM}$ to do this.}
+
+%\textbf{Theorem:} $L$ is not decidable.
+
+%\textbf{Proof:} For any $M,w$ we let $M_1$ be the TM which takes input string $x$:
+
+%\begin{enumerate}
+%	\item If $x \neq w$, $M_1$ rejects and writes no output.
+%	\item If $x = w$, run as $M$ on input $w$, except for every instance where $M$ uses $\$$, replace with $\$'$, and if $M$ were to accept, first write \$ to the tape, then accept. 
+%\end{enumerate}
+
+%Now we construct TM $S$ to decide $A_{TM}$. Let $R$ be the hypothetical TM which can decide $L$:
+
+
+\section*{Motivation}
+Current algs like RNAz use sliding window approaches, its possible that RNA secondary structures might loop around outside the scope of the window, so another approach might be cool. Motivated by compression algorithms that do not use sliding windows, like LZW, and instead use a dictionary approach might be able to detect these additional structures.
+
+\section*{Objectives}
+
+To be able to make the most awesomest RNA secondary structure detector and solve cancer using it ezpz
+
+\section*{Methods}
+
+code probably
+
+\end{document}
