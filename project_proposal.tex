@@ -1,6 +1,6 @@
 \documentclass[letterpaper, 12pt]{artikel3}
 
- \usepackage{fullpage}
+\usepackage{fullpage}
 \usepackage{amssymb}
 \usepackage{algorithm}
 \usepackage{amsmath}
@@ -16,12 +16,19 @@
 %\usetikzlibrary{automata, positioning}
 %\usepackage{algorithmic}
 
-\title{CSC482B Project Proposal: RNA\_LZW (title subject to change)}
+\title{CSC482B Project Proposal: RNA\_LZW}
 \date{\today}
 \author{Quinn Gieseke, Claire Champernowne}
 
 \begin{document}
-\maketitle
+%\maketitle
+
+\Huge{CSC482B Project Proposal: RNA\_LZW}
+
+\large{Quinn Gieseke, Claire Champernowne}
+
+\large{\today}
+\normalsize
 
 % leaving this part in as a little format guide for how latex works if you need a refresher
 
@@ -43,7 +50,7 @@
 
 %Now we construct TM $S$ to decide $A_{TM}$. Let $R$ be the hypothetical TM which can decide $L$:
 
-\vspace{-12mm}
+\vspace{-7mm}
 \section*{Motivation}
 Detecting RNA secondary structures is a process which is integral to understanding the functions of non-coding RNA sequences. Though there are existing bioinformatics tools used for detection, these programs, thwy are not without their limitations.  Specifically,  RNAz 1.0 uses a sliding window approach in its analysis of a sequence [1], meaning there may be structures with loops existing outside the scope of the window. 
 
