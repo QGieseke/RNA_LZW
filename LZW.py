@@ -12,11 +12,13 @@ def main(argv):
     
     full_fasta = full_fasta.split("\n")
     
-    print(full_fasta)
-
-    for seq in range(0, len(full_fasta), 2):
-        print(seq)
-        LZW(full_fasta[seq:seq+2])
+    #print(full_fasta)
+    #remove first line of metadata, join rest w/no newline
+    seq = "".join(full_fasta[1:])
+    LZW(seq)
+#   for seq in range(0, len(full_fasta), 2):
+#       print(seq)
+#       LZW(full_fasta[seq:seq+2])
 
 
 
@@ -28,14 +30,14 @@ def LZW(seq):
     #initialize the dictionary to contain all strings of length 1
     dictionary = {}
     dict_val = 0
-    for char in "ATCG":
+    for char in "AUCG":
         dictionary[char] = dict_val
         dict_val = dict_val+1
 
     buff = ""
 #    buff = buff + seq[1][0]
     output = ""
-    for char in seq[1]:
+    for char in seq:
         buff = buff + char
         #find the longest string W that matches the current input
         try:
