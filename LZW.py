@@ -22,6 +22,28 @@ def main(argv):
 #       LZW(full_fasta[seq:seq+2])
 
 
+# flip given sequence
+def flip_key(key):
+    key_flipped = ''
+    for char in key:
+        if char == 'A':
+            key_flipped = key_flipped + 'U'
+        elif char == 'U':
+            key_flipped = key_flipped + 'A'
+        elif char == 'C':
+            key_flipped = key_flipped + 'G'
+        elif char == 'G':
+            key_flipped = key_flipped + 'C'
+    return key_flipped
+
+
+# check if opposing key exists, and how many times
+def opposing_keys(dictionary):
+    for key in dictionary:
+        try:
+            print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' exists in dictionary ' + str(len(dictionary[flip_key(key)][1])) + ' times. ')
+        except:
+            print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' does not exist in dictionary.')
 
 
 def LZW(seq):
@@ -63,6 +85,7 @@ def LZW(seq):
         #GOTO step 2 (loop bottom)
 
     print('DICTIONARY: ' + str(dictionary))
+    opposing_keys(dictionary)
     # print('OUTPUT: ' + output)
 
 
