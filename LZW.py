@@ -38,12 +38,14 @@ def flip_key(key):
 
 
 # check if opposing key exists, and how many times
-def opposing_keys(dictionary):
+def opposing_keys(dictionary, seq):
     for key in dictionary:
         try:
             print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' exists in dictionary ' + str(len(dictionary[flip_key(key)][1])) + ' times. ')
+            print(key + ' exists in sequence ' + str(seq.count(key)) + ' times. ' + flip_key(key) + ' exists in sequence ' + str(seq.count(flip_key(key))) + ' times. ')
         except:
             print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' does not exist in dictionary.')
+            print(key + ' exists in sequence ' + str(seq.count(key)) + ' times. ' + flip_key(key) + ' exists in sequence ' + str(seq.count(flip_key(key))) + ' times. ')
 
 
 def LZW(seq):
@@ -85,7 +87,7 @@ def LZW(seq):
         #GOTO step 2 (loop bottom)
 
     print('DICTIONARY: ' + str(dictionary))
-    opposing_keys(dictionary)
+    opposing_keys(dictionary, seq)
     # print('OUTPUT: ' + output)
 
 
