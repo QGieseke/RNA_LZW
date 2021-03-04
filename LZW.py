@@ -1,4 +1,5 @@
 import sys
+import numpy as np
 
 
 def main(argv):
@@ -26,29 +27,32 @@ def main(argv):
 def LZW(seq):
     if(len(seq) < 2):
        return 0 
-    print(seq)
+    # print('SEQUENCE: ' + seq)
     #initialize the dictionary to contain all strings of length 1
     dictionary = {}
     dict_val = 0
     for char in "AUCG":
-        dictionary[char] = dict_val
+        dictionary[char] = [dict_val, []]
         dict_val = dict_val+1
 
     buff = ""
 #    buff = buff + seq[1][0]
     output = ""
-    for char in seq:
+    for index, char in enumerate(seq):
         buff = buff + char
         #find the longest string W that matches the current input
         try:
             dictionary[buff]
+            if buff in dictionary.keys():
+                dictionary[buff][1].append(index)
+            # check if in dict, if in dict add last index?
         
         except:
             try: #debugging try catch, not control flow try catch :p
                 #emit the dictionary index for W to output and remove W from the input
                 output = output + str(dictionary[buff[:-1]]) + " "
                 #add W followed by the next symbol in the input to the dictionary
-                dictionary[buff] = dict_val         #TODO what do we associate with it (value metric + location of last match?
+                dictionary[buff] = [dict_val, [index]]  #TODO what do we associate with it (value metric + location of last match?
                 dict_val = dict_val + 1
                 #remove W from input
                 buff = buff[len(buff)-1:]
@@ -60,8 +64,8 @@ def LZW(seq):
                 return
         #GOTO step 2 (loop bottom)
 
-    print(str(dictionary))
-    print(output)
+    print('DICTIONARY: ' + str(dictionary))
+    # print('OUTPUT: ' + output)
 
 
 if __name__ == "__main__":
