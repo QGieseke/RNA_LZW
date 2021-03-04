@@ -42,9 +42,11 @@ def opposing_keys(dictionary, seq):
     for key in dictionary:
         try:
             print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' exists in dictionary ' + str(len(dictionary[flip_key(key)][1])) + ' times. ')
+            # comment out the below line for faster output
             print(key + ' exists in sequence ' + str(seq.count(key)) + ' times. ' + flip_key(key) + ' exists in sequence ' + str(seq.count(flip_key(key))) + ' times. ')
         except:
             print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' does not exist in dictionary.')
+            # comment out the below line for faster output
             print(key + ' exists in sequence ' + str(seq.count(key)) + ' times. ' + flip_key(key) + ' exists in sequence ' + str(seq.count(flip_key(key))) + ' times. ')
 
 
@@ -59,32 +61,40 @@ def LZW(seq):
         dictionary[char] = [dict_val, []]
         dict_val = dict_val+1
 
-    buff = ""
-#    buff = buff + seq[1][0]
-    output = ""
-    for index, char in enumerate(seq):
-        buff = buff + char
-        #find the longest string W that matches the current input
-        try:
-            dictionary[buff][1].append(index)
-            # check if in dict, if in dict add last index?
-        
-        except:
-            try: #debugging try catch, not control flow try catch :p
-                #emit the dictionary index for W to output and remove W from the input
-                output = output + str(dictionary[buff[:-1]]) + " "
-                #add W followed by the next symbol in the input to the dictionary
-                dictionary[buff] = [dict_val, [index]]  #TODO what do we associate with it (value metric + location of last match?
-                dict_val = dict_val + 1
-                #remove W from input
-                buff = buff[len(buff)-1:]
+    for i in range(10):
+        buff = ""
+    #    buff = buff + seq[1][0]
+        output = ""
+        for index, char in enumerate(seq):
+            buff = buff + char
+            #find the longest string W that matches the current input
+            try:
+                dictionary[buff][1].append(index)
+                # check if in dict, if in dict add last index?
+
             except:
-                print("BROKE\n\n")
-                print(str(dictionary))
-                print(buff)
-                print(output)
-                return
-        #GOTO step 2 (loop bottom)
+                try: #debugging try catch, not control flow try catch :p
+                    #emit the dictionary index for W to output and remove W from the input
+                    output = output + str(dictionary[buff[:-1]]) + " "
+                    #add W followed by the next symbol in the input to the dictionary
+                    dictionary[buff] = [dict_val, [index]]  #TODO what do we associate with it (value metric + location of last match?
+                    dict_val = dict_val + 1
+                    #remove W from input
+                    buff = buff[len(buff)-1:]
+                except:
+                    print("BROKE\n\n")
+                    print(str(dictionary))
+                    print(buff)
+                    print(output)
+                    return
+            #GOTO step 2 (loop bottom)
+
+    for key in dictionary:
+        temp_list = []
+        for i in dictionary[key][1]:
+            if i not in temp_list:
+                temp_list.append(i)
+        dictionary[key][1] = temp_list
 
     print('DICTIONARY: ' + str(dictionary))
     opposing_keys(dictionary, seq)
