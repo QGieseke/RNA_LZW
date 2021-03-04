@@ -42,9 +42,7 @@ def LZW(seq):
         buff = buff + char
         #find the longest string W that matches the current input
         try:
-            dictionary[buff]
-            if buff in dictionary.keys():
-                dictionary[buff][1].append(index)
+            dictionary[buff][1].append(index)
             # check if in dict, if in dict add last index?
         
         except:
