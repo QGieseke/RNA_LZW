@@ -37,8 +37,83 @@ def flip_key(key):
     return key_flipped
 
 
+def test_metrics(dictionary, seq):
+    # for keys of size 1-3, 4-7, 8-11, 12+
+    dict_13 = {}
+    dict_47 = {}
+    dict_811 = {}
+    dict_12plus = {}
+    dict_notable = {}
+
+    for key in dictionary:
+        if len(key) >= 1 and len(key) <= 3:
+            dict_13[key] = dictionary[key]
+        if len(key) >= 4 and len(key) <= 7:
+            dict_47[key] = dictionary[key]
+        if len(key) >= 8 and len(key) <= 11:
+            dict_811[key] = dictionary[key]
+        if len(key) >= 12:
+            dict_12plus[key] = dictionary[key]
+    
+    per_vals = []
+    for key in dict_13:
+        dict_num = len(dict_13[key][1])
+        seq_num = seq.count(key)
+        if dict_num > seq_num:
+            dict_notable[key] = [dict_num,seq_num]
+        else:
+            per_vals.append((dict_num/seq_num)*100)
+
+    print(str(len(dict_13.keys())) + ' keys of len 1 - 3 found instances with an avg accuracy of ' + str(sum(per_vals)/len(dict_13.keys())) + '% accuracy')
+
+    per_vals = []
+    for key in dict_47:
+        dict_num = len(dict_47[key][1])
+        seq_num = seq.count(key)
+        if dict_num > seq_num:
+            dict_notable[key] = [dict_num,seq_num]
+        else:
+            per_vals.append((dict_num/seq_num)*100)
+    print(str(len(dict_47.keys())) + ' keys of len 4 - 7 found instances with an avg accuracy of ' + str(sum(per_vals)/len(dict_47.keys())) + '% accuracy')
+
+    per_vals = []
+    for key in dict_811:
+        dict_num = len(dict_811[key][1])
+        seq_num = seq.count(key)
+        if dict_num > seq_num:
+            dict_notable[key] = [dict_num,seq_num]
+        else:
+            per_vals.append((dict_num/seq_num)*100)
+    print(str(len(dict_811.keys())) + ' keys of len 8 - 11 found instances with an avg accuracy of ' + str(sum(per_vals)/len(dict_811.keys())) + '% accuracy')
+
+    per_vals = []
+    for key in dict_12plus:
+        dict_num = len(dict_12plus[key][1])
+        seq_num = seq.count(key)
+        if dict_num > seq_num:
+            dict_notable[key] = [dict_num,seq_num]
+        else:
+            per_vals.append((dict_num/seq_num)*100)
+    print(str(len(dict_12plus.keys())) + ' keys of len 12+ found instances with an avg of ' + str(sum(per_vals)/len(dict_12plus.keys())) + '%% accuracy')
+
+    print('The following keys had an accuracy >100%')
+    for key in dict_notable.keys():
+        print(key + ' exists in dictionary, seq ' + str(dict_notable[key][0]) + ', ' + str(dict_notable[key][1]) + ' times respectively')
+
+    max_len = -1
+    max_list = []
+    for key in dictionary.keys(): 
+        if len(key) > max_len: 
+            max_len = len(key) 
+            max_list = [key]
+        elif len(key) == max_len:
+            max_list.append(key)
+    
+    print('the longest subsequences found were ' + str(max_list))
+
+
 # check if opposing key exists, and how many times
-def opposing_keys(dictionary, seq):
+def opposing_keys_check(dictionary, seq):
     for key in dictionary:
         try:
             print(key + ' exists in dictionary ' + str(len(dictionary[key][1])) + ' times. ' + flip_key(key) + ' exists in dictionary ' + str(len(dictionary[flip_key(key)][1])) + ' times. ')
@@ -63,7 +138,7 @@ def LZW(seq):
 
     for i in range(10):
         buff = ""
-    #    buff = buff + seq[1][0]
+    #  buff = buff + seq[1][0]
         output = ""
         for index, char in enumerate(seq):
             buff = buff + char
@@ -97,7 +172,8 @@ def LZW(seq):
         dictionary[key][1] = temp_list
 
     print('DICTIONARY: ' + str(dictionary))
-    opposing_keys(dictionary, seq)
+    test_metrics(dictionary, seq)
+    # opposing_keys_check(dictionary, seq)
     # print('OUTPUT: ' + output)
 
 
