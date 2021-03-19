@@ -10,10 +10,8 @@ def main(argv):
     fp = open(argv[0], "r")
 
     full_fasta = fp.read()
-    
     full_fasta = full_fasta.split("\n")
     
-    #print(full_fasta)
     #remove first line of metadata, join rest w/no newline
     seq = "".join(full_fasta[1:])
     LZW(seq)
@@ -34,11 +32,13 @@ def flip_key(key):
             key_flipped = key_flipped + 'G'
         elif char == 'G':
             key_flipped = key_flipped + 'C'
+        elif char == 'T':  # remove from final version
+            key_flipped = key_flipped + 'A'
     return key_flipped
 
 
 def test_metrics(dictionary, seq):
-    # for keys of size 1-3, 4-7, 8-11, 12+
+    print('current dictionary size: ' + str(len(dictionary)))
     dict_13 = {}
     dict_47 = {}
     dict_811 = {}
@@ -74,7 +74,7 @@ def test_metrics(dictionary, seq):
             dict_notable[key] = [dict_num,seq_num]
         else:
             per_vals.append((dict_num/seq_num)*100)
-    print(str(len(dict_47.keys())) + ' keys of len 4 - 7 found instances with an avg accuracy of ' + str(sum(per_vals)/len(dict_47.keys())) + '% accuracy')
+    print(str(len(dict_47.keys())) + ' keys of len 4 - 7 found instances with an avg of ' + str(sum(per_vals)/len(dict_47.keys())) + '% accuracy')
 
     per_vals = []
     for key in dict_811:
@@ -84,7 +84,7 @@ def test_metrics(dictionary, seq):
             dict_notable[key] = [dict_num,seq_num]
         else:
             per_vals.append((dict_num/seq_num)*100)
-    print(str(len(dict_811.keys())) + ' keys of len 8 - 11 found instances with an avg accuracy of ' + str(sum(per_vals)/len(dict_811.keys())) + '% accuracy')
+    print(str(len(dict_811.keys())) + ' keys of len 8 - 11 found instances with an avg of ' + str(sum(per_vals)/len(dict_811.keys())) + '% accuracy')
 
     per_vals = []
     for key in dict_12plus:
@@ -94,11 +94,14 @@ def test_metrics(dictionary, seq):
             dict_notable[key] = [dict_num,seq_num]
         else:
             per_vals.append((dict_num/seq_num)*100)
-    print(str(len(dict_12plus.keys())) + ' keys of len 12+ found instances with an avg of ' + str(sum(per_vals)/len(dict_12plus.keys())) + '%% accuracy')
+    try:
+        print(str(len(dict_12plus.keys())) + ' keys of len 12+ found instances with an avg of ' + str(sum(per_vals)/len(dict_12plus.keys())) + '%% accuracy')
+    except Exception:
+        pass
 
-    print('The following keys had an accuracy >100%')
-    for key in dict_notable.keys():
-        print(key + ' exists in dictionary, seq ' + str(dict_notable[key][0]) + ', ' + str(dict_notable[key][1]) + ' times respectively')
+    # print('The following keys had an accuracy >100%')
+    # for key in dict_notable.keys():
+    #     print(key + ' exists in dictionary, seq ' + str(dict_notable[key][0]) + ', ' + str(dict_notable[key][1]) + ' times respectively')
 
     max_len = -1
     max_list = []
@@ -132,14 +135,20 @@ def LZW(seq):
     #initialize the dictionary to contain all strings of length 1
     dictionary = {}
     dict_val = 0
-    for char in "AUCG":
-        dictionary[char] = [dict_val, []]
-        dict_val = dict_val+1
 
-    for i in range(10):
+    if 'T' in seq:
+        for char in "ATCG":
+            dictionary[char] = [dict_val, []]
+            dict_val = dict_val+1
+    else:
+        for char in "AUCG":
+            dictionary[char] = [dict_val, []]
+            dict_val = dict_val+1
+
+    for i in range(15):
         buff = ""
     #  buff = buff + seq[1][0]
-        output = ""
+        output = []
         for index, char in enumerate(seq):
             buff = buff + char
             #find the longest string W that matches the current input
@@ -150,7 +159,8 @@ def LZW(seq):
             except:
                 try: #debugging try catch, not control flow try catch :p
                     #emit the dictionary index for W to output and remove W from the input
-                    output = output + str(dictionary[buff[:-1]]) + " "
+                    output.append([buff[:-1],False])  # boolean val represents if subsequence has match
+                    # output.append(dictionary[buff[:-1]])
                     #add W followed by the next symbol in the input to the dictionary
                     dictionary[buff] = [dict_val, [index]]  #TODO what do we associate with it (value metric + location of last match?
                     dict_val = dict_val + 1
@@ -160,9 +170,19 @@ def LZW(seq):
                     print("BROKE\n\n")
                     print(str(dictionary))
                     print(buff)
-                    print(output)
+                    print(str(output))
                     return
             #GOTO step 2 (loop bottom)
+
+        # for key in dictionary:  # only in loop for testing
+        #     temp_list = []
+        #     for i in dictionary[key][1]:
+        #         if i not in temp_list:
+        #             temp_list.append(i)
+        #     dictionary[key][1] = temp_list
+
+        # print('Pass ' + str(k))
+        # test_metrics(dictionary, seq)
 
     for key in dictionary:
         temp_list = []
@@ -170,11 +190,19 @@ def LZW(seq):
             if i not in temp_list:
                 temp_list.append(i)
         dictionary[key][1] = temp_list
-
+        
     print('DICTIONARY: ' + str(dictionary))
-    test_metrics(dictionary, seq)
+
+    for ele in output:
+        try:
+            if dictionary[flip_key(ele[0])]:
+                ele[1] = True
+        except Exception:
+            pass
+
+    print('OUTPUT: ' + str(output))
+    # test_metrics(dictionary, seq)
     # opposing_keys_check(dictionary, seq)
-    # print('OUTPUT: ' + output)
 
 
 if __name__ == "__main__":
