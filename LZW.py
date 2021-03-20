@@ -159,7 +159,7 @@ def LZW(seq):
             except:
                 try: #debugging try catch, not control flow try catch :p
                     #emit the dictionary index for W to output and remove W from the input
-                    output.append([buff[:-1],False])  # boolean val represents if subsequence has match
+                    output.append([buff[:-1],'FALSE'])  # boolean val represents if subsequence has match
                     # output.append(dictionary[buff[:-1]])
                     #add W followed by the next symbol in the input to the dictionary
                     dictionary[buff] = [dict_val, [index]]  #TODO what do we associate with it (value metric + location of last match?
@@ -184,23 +184,34 @@ def LZW(seq):
         # print('Pass ' + str(k))
         # test_metrics(dictionary, seq)
 
-    for key in dictionary:
+    for key in dictionary:  # remove repeat instances of indexes
         temp_list = []
         for i in dictionary[key][1]:
             if i not in temp_list:
                 temp_list.append(i)
         dictionary[key][1] = temp_list
-        
+
+    stem_keys = []
+    stem_threshold = 8  # keys of this size or greater will search for match
+    for key in dictionary:
+        if len(key) >= stem_threshold:
+            stem_keys.append([key,'FALSE'])
+
     print('DICTIONARY: ' + str(dictionary))
 
-    for ele in output:
-        try:
-            if dictionary[flip_key(ele[0])]:
-                ele[1] = True
-        except Exception:
-            pass
+    for ele in stem_keys:
+        if seq.count(flip_key(ele[0])) > 0 or seq.count(flip_key(ele[0])[::-1]) > 0:
+            ele[1] = 'SHOULD BE TRUE'
+        if flip_key(ele[0]) in dictionary:
+            ele[1] = 'TRUE1'
+        elif flip_key(ele[0])[::-1] in dictionary:
+            ele[1] = 'TRUE2'
+        # print('seq count for ' + flip_key(ele[0])[::-1] + ' ' + str(seq.count(flip_key(ele[0])) + seq.count(flip_key(ele[0])[::-1])))
+        # elif seq.count(flip_key(ele[0])) > 0:
+            # ele[1] = 'SHOULD BE TRUE'
 
-    print('OUTPUT: ' + str(output))
+    print(str(len(stem_keys)) + ' keys over length ' + str(stem_threshold))
+    print('POTENTIAL STEMS: ' + str(stem_keys))
     # test_metrics(dictionary, seq)
     # opposing_keys_check(dictionary, seq)
 
