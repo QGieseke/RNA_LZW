@@ -128,6 +128,25 @@ def opposing_keys_check(dictionary, seq):
             print(key + ' exists in sequence ' + str(seq.count(key)) + ' times. ' + flip_key(key) + ' exists in sequence ' + str(seq.count(flip_key(key))) + ' times. ')
 
 
+def stem_match(dictionary, threshold, seq):
+    stem_keys = []
+    for key in dictionary:
+        if len(key) >= threshold:
+            stem_keys.append([key,'FALSE'])
+
+    print(str(len(stem_keys)) + ' keys over length ' + str(threshold))
+
+    for ele in stem_keys:
+        if seq.count(flip_key(ele[0])) > 0 or seq.count(flip_key(ele[0])[::-1]) > 0:
+            ele[1] = 'SHOULD BE TRUE'
+        if flip_key(ele[0]) in dictionary:
+            ele[1] = 'TRUE1'
+        elif flip_key(ele[0])[::-1] in dictionary:
+            ele[1] = 'TRUE2'
+
+    return stem_keys
+
+
 def LZW(seq):
     if(len(seq) < 2):
        return 0 
@@ -145,7 +164,7 @@ def LZW(seq):
             dictionary[char] = [dict_val, []]
             dict_val = dict_val+1
 
-    for i in range(15):
+    for i in range(50):
         buff = ""
     #  buff = buff + seq[1][0]
         output = []
@@ -159,7 +178,7 @@ def LZW(seq):
             except:
                 try: #debugging try catch, not control flow try catch :p
                     #emit the dictionary index for W to output and remove W from the input
-                    output.append([buff[:-1],'FALSE'])  # boolean val represents if subsequence has match
+                    output.append(buff[:-1])
                     # output.append(dictionary[buff[:-1]])
                     #add W followed by the next symbol in the input to the dictionary
                     dictionary[buff] = [dict_val, [index]]  #TODO what do we associate with it (value metric + location of last match?
@@ -191,27 +210,8 @@ def LZW(seq):
                 temp_list.append(i)
         dictionary[key][1] = temp_list
 
-    stem_keys = []
-    stem_threshold = 8  # keys of this size or greater will search for match
-    for key in dictionary:
-        if len(key) >= stem_threshold:
-            stem_keys.append([key,'FALSE'])
-
     print('DICTIONARY: ' + str(dictionary))
-
-    for ele in stem_keys:
-        if seq.count(flip_key(ele[0])) > 0 or seq.count(flip_key(ele[0])[::-1]) > 0:
-            ele[1] = 'SHOULD BE TRUE'
-        if flip_key(ele[0]) in dictionary:
-            ele[1] = 'TRUE1'
-        elif flip_key(ele[0])[::-1] in dictionary:
-            ele[1] = 'TRUE2'
-        # print('seq count for ' + flip_key(ele[0])[::-1] + ' ' + str(seq.count(flip_key(ele[0])) + seq.count(flip_key(ele[0])[::-1])))
-        # elif seq.count(flip_key(ele[0])) > 0:
-            # ele[1] = 'SHOULD BE TRUE'
-
-    print(str(len(stem_keys)) + ' keys over length ' + str(stem_threshold))
-    print('POTENTIAL STEMS: ' + str(stem_keys))
+    print('POTENTIAL STEMS: ' + str(stem_match(dictionary,8,seq)))
     # test_metrics(dictionary, seq)
     # opposing_keys_check(dictionary, seq)
 
