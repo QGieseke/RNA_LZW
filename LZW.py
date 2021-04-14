@@ -21,10 +21,17 @@ def main(argv):
     dot_bracket = ['-' for i in seq]
     print(str(dot_bracket))
 
-    all_dot_brackets(0,dot_bracket,dictionary,4)
+    all_dot_brackets(0,dot_bracket,dictionary,8)
 
     global struct_list
     print(str(struct_list))
+    string_list = []
+    for struct in struct_list:
+        dot_bracket = ''
+        for ele in struct:
+            dot_bracket+=ele
+        string_list.append(dot_bracket)
+    print(str(string_list))
 #   for seq in range(0, len(full_fasta), 2):
 #       print(seq)
 #       LZW(full_fasta[seq:seq+2])
@@ -159,9 +166,10 @@ def expand_dict(dictionary,threshold):
 
 
 def all_dot_brackets(i,dot_bracket,dictionary,threshold):
-    if '-' not in dot_bracket:
+    # if '-' not in dot_bracket:
+    if i == len(dot_bracket) - 1:
         global struct_list
-        struct_list.append([dot_bracket])
+        struct_list.append(dot_bracket)
         return
 
     for key in dictionary:
@@ -178,10 +186,12 @@ def all_dot_brackets(i,dot_bracket,dictionary,threshold):
                                 else:
                                     for x in range(index - len(key) -1, index): db_copy[x] = ')'
                                     for x in range(match_index - len(key) -1, match_index): db_copy[x] = '('
+                                # print(str(db_copy))
                                 all_dot_brackets(index + 1,db_copy,dictionary,threshold)
         except:
             continue
     db_copy = dot_bracket.copy()
+    # print(str(db_copy))
     db_copy[i] = '.'
     all_dot_brackets(i + 1,db_copy,dictionary,threshold)
 
@@ -251,11 +261,7 @@ def LZW(seq):
 
     # print('DICTIONARY: ' + str(dictionary))
     # print('POTENTIAL STEMS: ' + str(stem_match(dictionary,8,seq)))
-    print('BEFOREEE')
-    test_metrics(dictionary, seq)
     dictionary = expand_dict(dictionary,5)
-    print('AFTERRR')
-    test_metrics(dictionary, seq)
     return dictionary
     # opposing_keys_check(dictionary, seq)
 
