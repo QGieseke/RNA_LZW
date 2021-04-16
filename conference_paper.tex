@@ -24,7 +24,6 @@
 %% The first command in your LaTeX source must be the \documentclass command.
 \documentclass[sigconf]{acmart}
 
-\usepackage{tabularx}
 %%%% As of March 2017, [siggraph] is no longer used. Please use sigconf (above) for SIGGRAPH conferences.
 
 %%%% Proceedings format for SIGPLAN conferences 
@@ -84,17 +83,8 @@
 %% end of the preamble, start of the body of the document source.
 \begin{document}
 
-%%
-%% The "title" command has an optional parameter,
-%% allowing the author to define a "short title" to be used in page headers.
 \title{RNA\_LZW: A Novel Method for Detection of Stems and Pseudoknotted Structures in Non-Coding RNA}
 
-%%
-%% The "author" command and its associated commands are used to define
-%% the authors and their affiliations.
-%% Of note is the shared affiliation of the first two authors, and the
-%% "authornote" and "authornotemark" commands
-%% used to denote shared contribution to the research.
 \author{Claire Champernowne}
 \email{cchampernowne@gmail.com}
 \affiliation{%
@@ -107,18 +97,8 @@
   \institution{University of Victoria}
 }
 
-
-%%
-%% By default, the full list of authors will be used in the page
-%% headers. Often, this list is too long, and will overlap
-%% other information printed in the page headers. This command allows
-%% the author to define a more concise list
-%% of authors' names for this purpose.
 \renewcommand{\shortauthors}{Champernowne and Gieseke, et al.}
 
-%%
-%% The abstract is a short summary of the work to be presented in the
-%% article.
 \begin{abstract}
   A clear and well-documented \LaTeX\ document is presented as an
   article formatted for publication by ACM in a conference proceedings
@@ -164,10 +144,34 @@ RNA\_LZW uses only the encoding step of the LZW compression algorithm.  A high l
 
 
 \subsection{Dot-Bracket Construction}
-
+Once we have the dictionary with many possible base matches, we must remove overlapping matches, and place only the most likely ones into the final output. Currently we measure stem likelihood first by length, and then by distance. The steps are as follows:
 \begin{enumerate}
-\item the algo
+\item Remove impossible matches.
+	\begin{enumerate}
+	\item While adding entries to the dictionary, it is possible to add overlapping matches, where a sequence of bases can be paired with itself. For example, the sequence \texttt{UGAUAGCA} when reversed will exactly pair to itself. 
+	\end{enumerate}
+\item For each dictionary entry, parse the possible match locations and select the pair of base sequences that are the shortest distance apart.
+\item Sort by match length.
+\item Check the location of each stem placement in the output:
+	\begin{enumerate}
+	\item If the location is empty, add the stem to the output, marked by a unique key at every base location along the stem
+	\item If any base in the location already has a stem, skip. Since we iterate from longest stems down to shortest, this biases the algorithm towards including longer stems.
+	\end{enumerate}
 \end{enumerate}
+At this point in the algorithm, the output consists of a unique symbol per stem (The index in the output of the start of the right stem half), that is replicated at each base in the stem. To convert into standard dot-bracket notation, we must essentially reduce the number of bracket symbols down. For the purposes of notating pseudoknots, we use the bracket progression of \texttt{([\{<ABCD} for opening brackets, and \texttt{dcba>\}])} for closing braces.
+This algorithm utilizes a single modified stack in order to match braces as it progresses through the output sequence. The stack is allowed to have "transparent" entries that stay on the stack, but peek and pop operations will return the first non-transparent entry on the stack.
+\begin{enumerate}
+	\item Iterate through the output, left to right.
+		\begin{enumerate}
+		\item If the current value equals the top of the stack, pop the top of the stack. This is equivalent to finding a normal brace match
+		\item If the current value equals the index of the match, and that value is not on top of the stack, then we have a closing bracket with its requisite opening bracket must be beyond the last opening bracket, meaning we have found a pseudoknonot.
+			\begin{itemize}
+			\item Since representing a pseudoknot requires a new style of brace, we iterate through the stack between the opening and closing brace (including transparent entries), seeking out the highest value of brace. We then assign a one higher value of brace to the current pair, and make both entries transparent. 
+			\end{itemize}
+		\item If neither of the above cases are true, we have a normal opening brace. Push current value to the stack.
+		\end{enumerate}
+\end{enumerate}
+Finally, we iterate through the output one more time, converting each unique id into its corresponding brace value, and replacing any gaps with '.'.
 
 
 \section{results}
@@ -188,29 +192,28 @@ As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a go
 \begin{table}
   \caption{Dot-Bracket Comparison}
   \label{tab:tRNA}
-  \begin{tabularx}{\textwidth}{l}
+  \begin{tabular}{l}
     \textbf{Sequence}\\
     GCCCGGAUGAUCCUCAGUGGUCUGGGGUGCAGGCUUCA\\
     AACCUGUAGCUGUCUAGCGACAGAGUGGUUCAAUUCCA\\
     CCUUUCGGGCG\\
     \midrule
     \textbf{RNA\_LZW Output}\\
-    (((((..........................................(((((....)))))....................))))).\\
+	(((((..(((...))).............((((....((())))...(((((....))))).((((.......)))).)))))))).\\
     \midrule 
     \textbf{Known Dot-Bracket Structure}\\
     (((((((.(..((((((....))))))((((((.......)))))).(((((....))))).((((.......))))).))))))).\\
-\end{tabularx}
+\end{tabular}
 \end{table}
 
 \smallskip
 
-\setlength{\parindent}{0cm}Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure. \\
-Due to the small size of this sequence, RNA\_Z's output is clearly less complete than the known structure, but the hypothesis that RNA\_Z is capable of matching base pairs from any range in the structure, is supported by the output generated from this sequence. 
+\setlength{\parindent}{0cm}Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure.  In the case of this tRNA sequence,  RNA\_Z achieves 71\% accuracy when doing a string comparison to the known dot-bracket structure. \\
+Due to the small size of this sequence, RNA\_Z's output is clearly different from the known structure, but the hypothesis that RNA\_Z is capable of matching base pairs from any range in the structure, is supported by the output generated from this sequence. 
 
 \subsection{Homo sapiens telomerase RNA}
 
 Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function [5].  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.\\
-Though the length of the sequence (450 nucleotides) means that visual comparison will be difficult for the reader,  a \% similarity comparison is notable because [blah]\\
 
 \begin{figure}
   \includegraphics[width=\linewidth]{for_paper.png}
@@ -239,19 +242,12 @@ Though the length of the sequence (450 nucleotides) means that visual comparison
     .))))........
 \end{tabular}
 \end{table}
-
-\smallskip
-
-says stuff about Table \ref{fig:telomerase}
+Though the length of the sequence (450 nucleotides) means that visual comparison shown in Table \ref{tab:telomerase} is difficult for the reader to assess. When doing a comparison of string similarity, RNA\_Z achieves 51\% accuracy.\\ 
 
 
 \section{discussion}
 
-The ``\verb|acmart|'' document class requires the use of the
-``Libertine'' typeface family. Your \TeX\ installation should include
-this set of packages. Please do not substitute other typefaces. The
-``\verb|lmodern|'' and ``\verb|ltimes|'' packages should not be used,
-as they will override the built-in typeface families.
+heyo\\
 
 \section{conclusion}
 
