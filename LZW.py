@@ -3,7 +3,7 @@ import numpy as np
 from collections import deque
 
 
-MIN_MATCH_LEN = 4       #heuristic, no basis
+MIN_MATCH_LEN = 2       #heuristic, no basis
 
 def main(argv):
 
@@ -277,8 +277,8 @@ def print_dot_brace(output, dictionary):
         app_clr = check_output(output, key[1][2], len(key[0]))  #this is checking the match "backwards" but since we just wanna see if its clear, its ok
         if(match_clr == -1 and app_clr == -1):
             #print("test", key[1][1], key[1][2])
-            set_output(output, key[1][1], len(key[0]), (max(key[1][1], key[1][2]), 1))
-            set_output(output, key[1][2], len(key[0]), (max(key[1][1], key[1][2]), 0))
+            set_output(output, max(key[1][1], key[1][2]), len(key[0]), (max(key[1][1], key[1][2]), 1))
+            set_output(output, min(key[1][1], key[1][2]), len(key[0]), (max(key[1][1], key[1][2]), 0))
         else:
             z = 0
             #there is a stem overlapping what we want to fill in, which is gonna be smaller or equal since we are iterating in order of length
