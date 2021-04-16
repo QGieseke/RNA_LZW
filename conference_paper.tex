@@ -100,7 +100,7 @@
 }
 
 \author{Quinn Gieseke}
-\email{ur email}
+\email{qgieseke@gmail.com}
 \affiliation{%
   \institution{University of Victoria}
 }
@@ -182,12 +182,12 @@ RNA\_LZW uses only the encoding step of the LZW compression algorithm.  A high l
 	\begin{enumerate}
 		\item In this case, the dictionary initially contains only four characters; A,U,C, and G. 
 	\end{enumerate}
-\item Initialize a buffer as an empty string.
-\item Add characters from the sequence to the buffer until the buffer represents a key that is not already represented in the dictionary. Once the buffer is added to the dictionary as a key, it is reset to an empty string.
+\item Initialize a buffer as the first character in the sequence.
+\item Add characters from the sequence to the buffer until the buffer represents a key that is not already represented in the dictionary. Once the buffer is added to the dictionary as a key, it is reset to just the last character.
 	\begin{enumerate}
-		\item Though not represented in a normal LZW algorithm, RNZ\_LZW records the index of the last character added to the buffer, when the buffer is already represented in the dictionary.
+		\item Though not represented in a normal LZW algorithm, RNZ\_LZW records additional metadata about the position of the buffer in the greater sequence into the dictionary.
 	\end{enumerate}
-\item Though LZW encoding normally has no need to iterate multiple times; RNA\_LZW uses multiple iterations to record each location of a key with greater accuracy.
+\item Though LZW encoding normally cannot iterate multiple times due to its need to be decoded without the dictionary; RNA\_LZW acts with global information, and does not have that restriction, and therefore uses multiple iterations to build a much more robust dictionary.
 \end{enumerate}
 
 
