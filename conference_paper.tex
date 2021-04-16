@@ -188,6 +188,8 @@ In order to test for RNA\_LZW's efficacy as a preprocessing(?) step in identifyi
 \end{figure}
 
 As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a good benchmark to visualize whether RNA\_LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery. \\
+Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure.  In the case of this tRNA sequence,  RNA\_Z achieves 71\% accuracy when doing a string comparison to the known dot-bracket structure. \\
+Due to the small size of this sequence, RNA\_Z's output is clearly different from the known structure, but the hypothesis that RNA\_Z is capable of matching base pairs from any range in the structure, is supported by the output generated from this sequence. 
 
 \begin{table}
   \caption{Dot-Bracket Comparison}
@@ -206,14 +208,11 @@ As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a go
 \end{tabular}
 \end{table}
 
-\smallskip
-
-\setlength{\parindent}{0cm}Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure.  In the case of this tRNA sequence,  RNA\_Z achieves 71\% accuracy when doing a string comparison to the known dot-bracket structure. \\
-Due to the small size of this sequence, RNA\_Z's output is clearly different from the known structure, but the hypothesis that RNA\_Z is capable of matching base pairs from any range in the structure, is supported by the output generated from this sequence. 
 
 \subsection{Homo sapiens telomerase RNA}
 
 Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function [5].  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.\\
+Though the length of the sequence (450 nucleotides) means that visual comparison shown in Table \ref{tab:telomerase} is difficult for the reader to assess. When doing a comparison of string similarity, RNA\_Z achieves 51\% accuracy.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{for_paper.png}
@@ -242,7 +241,14 @@ Telomerase is a ribonucleoprotein, meaning that it is a complex structure compri
     .))))........
 \end{tabular}
 \end{table}
-Though the length of the sequence (450 nucleotides) means that visual comparison shown in Table \ref{tab:telomerase} is difficult for the reader to assess. When doing a comparison of string similarity, RNA\_Z achieves 51\% accuracy.\\ 
+
+\subsection{Homo sapiens RNA, 28S ribosomal N1 (RNA28SN1)}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{for_paper2.png}
+  \caption{Homo sapiens 28S ribosomal RNA, generated using R2DT secondary structure visualization}
+  \label{fig:ribosomal}
+\end{figure}
 
 
 \section{discussion}
