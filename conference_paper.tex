@@ -23,6 +23,8 @@
 %%
 %% The first command in your LaTeX source must be the \documentclass command.
 \documentclass[sigconf]{acmart}
+
+\usepackage{tabularx}
 %%%% As of March 2017, [siggraph] is no longer used. Please use sigconf (above) for SIGGRAPH conferences.
 
 %%%% Proceedings format for SIGPLAN conferences 
@@ -161,9 +163,6 @@ RNA\_LZW uses only the encoding step of the LZW compression algorithm.  A high l
 \end{enumerate}
 
 
-\subsection{Dictionary Expansion (?)}
-
-
 \subsection{Dot-Bracket Construction}
 
 \begin{enumerate}
@@ -178,11 +177,18 @@ In order to test for RNA\_LZW's efficacy as a preprocessing(?) step in identifyi
 
 \subsection{Homo sapiens tRNA-SeC (anticodon TCA) 1-1 (TRU-TCA1-1)}
 
-Because this sequence is only 87 nucleotides long, it serves as a good benchmark to visualize whether RNA\_LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery.\\
+\begin{figure}
+  \includegraphics[width=\linewidth]{for_paper1.png}
+  \caption{Homo sapiens tRNA-SeC, generated using R2DT secondary structure visualization}
+  \label{fig:tRNA}
+\end{figure}
+
+As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a good benchmark to visualize whether RNA\_LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery. \\
+
 \begin{table}
   \caption{Dot-Bracket Comparison}
-  \label{tab:freq}
-  \begin{tabular}{l}
+  \label{tab:tRNA}
+  \begin{tabularx}{\textwidth}{l}
     \textbf{Sequence}\\
     GCCCGGAUGAUCCUCAGUGGUCUGGGGUGCAGGCUUCA\\
     AACCUGUAGCUGUCUAGCGACAGAGUGGUUCAAUUCCA\\
@@ -193,21 +199,50 @@ Because this sequence is only 87 nucleotides long, it serves as a good benchmark
     \midrule 
     \textbf{Known Dot-Bracket Structure}\\
     (((((((.(..((((((....))))))((((((.......)))))).(((((....))))).((((.......))))).))))))).\\
-\end{tabular}
+\end{tabularx}
 \end{table}
-\\
-Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table 1 shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure. \\
+
+\smallskip
+
+\setlength{\parindent}{0cm}Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure. \\
 Due to the small size of this sequence, RNA\_Z's output is clearly less complete than the known structure, but the hypothesis that RNA\_Z is capable of matching base pairs from any range in the structure, is supported by the output generated from this sequence. 
 
-\subsection{Homo sapiens (human) telomerase RNA}
+\subsection{Homo sapiens telomerase RNA}
+
+Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function [5].  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.\\
+Though the length of the sequence (450 nucleotides) means that visual comparison will be difficult for the reader,  a \% similarity comparison is notable because [blah]\\
 
 \begin{figure}
   \includegraphics[width=\linewidth]{for_paper.png}
-  \caption{Homo sapiens (human) telomerase RNA, generated using R2DT secondary structure visualization}
+  \caption{Homo sapiens telomerase RNA, generated using R2DT secondary structure visualization}
   \label{fig:telomerase}
 \end{figure}
 
-Figure \ref{fig:telomerase} shows a boat.
+\begin{table}
+  \caption{Dot-Bracket Comparison}
+  \label{tab:telomerase}
+  \begin{tabular}{l}
+    \textbf{Sequence}\\
+    \midrule
+    \textbf{RNA\_LZW Output}\\
+    (((((........(((((...(((((((.((((((.(((((((((..))))).....((((((.....(((((.......(((((((.((((((((...\\
+    (((((.((((((...))))))....))))).....((((((.)))))................)))))))))))))))..((((.))))..((((((.))\\
+    )))))....((((((((((..)))....)))))((((((((.(((((........((((((......))))))))))).......((((...))))))\\
+    ....((((....)))).....)))))).....)))))))).......)))).))))))..((((())))))).....))))))..(((((((..))))))))\\
+    ........)))))....((((..((()))))))))))))............\\
+    \midrule 
+    \textbf{Known Dot-Bracket Structure}\\
+    .................((((((((((((((.(((((........................................(((((.......(((((((((..............\\
+    ...)))))))))..))))).......................................................)))))...))))))))))))))..(((((((......\\
+    ((((((((..(((((((..(((((........(((((.((((..(((...............)))...))))))))).((((....)))).......)))))....\\
+    )))))))...))))).)))..............)))))))..........(((((((((((........(((((..((((........))))..)))))..)))))))\\
+    .))))........
+\end{tabular}
+\end{table}
+
+\smallskip
+
+says stuff about Table \ref{fig:telomerase}
 
 
 \section{discussion}
@@ -233,352 +268,18 @@ command has a ``short title'' parameter:
   \title[short title]{full title}
 \end{verbatim}
 
-\section{Authors and Affiliations}
+\section{bibliography}
 
-Each author must be defined separately for accurate metadata
-identification. Multiple authors may share one affiliation. Authors'
-names should not be abbreviated; use full first names wherever
-possible. Include authors' e-mail addresses whenever possible.
+[1] A. R. Gruber S. Findeiß, S. Washietl, I. L. Hofacker, and P. F. Stadler, “RNAZ 2.0: Improved Noncoding RNA Detection,” Pacific Symposium on Biocomputing, pp. 69–79, 2010. 
 
-Grouping authors' names or e-mail addresses, or providing an ``e-mail
-alias,'' as shown below, is not acceptable:
-\begin{verbatim}
-  \author{Brooke Aster, David Mehldau}
-  \email{dave,judy,steve@university.edu}
-  \email{firstname.lastname@phillips.org}
-\end{verbatim}
+[2] S. Washietl, I. L. Hofacker, and P. F. Stadler, “Fast and Reliable Prediction of Noncoding RNAs,” Proceedings of the National Academy of Sciences, vol. 102 (7), pp. 2454–2459, 2005.  
 
-The \verb|authornote| and \verb|authornotemark| commands allow a note
-to apply to multiple authors --- for example, if the first two authors
-of an article contributed equally to the work.
+[3] T. A. Welch, "A Technique for High-Performance Data Compression," in Computer, vol. 17, no. 6, pp. 8-19, June 1984, doi: 10.1109/MC.1984.1659158.
 
-If your author list is lengthy, you must define a shortened version of
-the list of authors to be used in the page headers, to prevent
-overlapping text. The following command should be placed just after
-the last \verb|\author{}| definition:
-\begin{verbatim}
-  \renewcommand{\shortauthors}{McCartney, et al.}
-\end{verbatim}
-Omitting this command will force the use of a concatenated list of all
-of the authors' names, which may result in overlapping text in the
-page headers.
+[4] I. L. Hofacker, S. Bonhoeffer, P. F. Stadler, R. Lorenz, and W. Fontana, “RNAfold manual page for RNAfold 2.4.16,” Theoretical Biochemistry Group. [Online]. Available: \url{https://www.tbi.univie.ac.at/RNA/RNAfold.1.html#heading7}. [Accessed: 21-Feb-2021]. 
 
-The article template's documentation, available at
-\url{https://www.acm.org/publications/proceedings-template}, has a
-complete explanation of these commands and tips for their effective
-use.
+[5] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC21964/
 
-\section{Rights Information}
-
-Authors of any work published by ACM will need to complete a rights
-form. Depending on the kind of work, and the rights management choice
-made by the author, this may be copyright transfer, permission,
-license, or an OA (open access) agreement.
-
-Regardless of the rights management choice, the author will receive a
-copy of the completed rights form once it has been submitted. This
-form contains \LaTeX\ commands that must be copied into the source
-document. When the document source is compiled, these commands and
-their parameters add formatted text to several areas of the final
-document:
-\begin{itemize}
-\item the ``ACM Reference Format'' text on the first page.
-\item the ``rights management'' text on the first page.
-\item the conference information in the page header(s).
-\end{itemize}
-
-Rights information is unique to the work; if you are preparing several
-works for an event, make sure to use the correct set of commands with
-each of the works.
-
-\section{CCS Concepts and User-Defined Keywords}
-
-Two elements of the ``acmart'' document class provide powerful
-taxonomic tools for you to help readers find your work in an online
-search.
-
-The ACM Computing Classification System ---
-\url{https://www.acm.org/publications/class-2012} --- is a set of
-classifiers and concepts that describe the computing
-discipline. Authors can select entries from this classification
-system, via \url{https://dl.acm.org/ccs/ccs.cfm}, and generate the
-commands to be included in the \LaTeX\ source.
-
-User-defined keywords are a comma-separated list of words and phrases
-of the authors' choosing, providing a more flexible way of describing
-the research being presented.
-
-CCS concepts and user-defined keywords are required for all short- and
-full-length articles, and optional for two-page abstracts.
-
-\section{Sectioning Commands}
-
-Your work should use standard \LaTeX\ sectioning commands:
-\verb|section|, \verb|subsection|, \verb|subsubsection|, and
-\verb|paragraph|. They should be numbered; do not remove the numbering
-from the commands.
-
-Simulating a sectioning command by setting the first word or words of
-a paragraph in boldface or italicized text is {\bfseries not allowed.}
-
-\section{Tables}
-
-The ``\verb|acmart|'' document class includes the ``\verb|booktabs|''
-package --- \url{https://ctan.org/pkg/booktabs} --- for preparing
-high-quality tables.
-
-Table captions are placed {\itshape above} the table.
-
-Because tables cannot be split across pages, the best placement for
-them is typically the top of the page nearest their initial cite.  To
-ensure this proper ``floating'' placement of tables, use the
-environment \textbf{table} to enclose the table's contents and the
-table caption.  The contents of the table itself must go in the
-\textbf{tabular} environment, to be aligned properly in rows and
-columns, with the desired horizontal and vertical rules.  Again,
-detailed instructions on \textbf{tabular} material are found in the
-\textit{\LaTeX\ User's Guide}.
-
-Immediately following this sentence is the point at which
-Table~\ref{tab:freq} is included in the input file; compare the
-placement of the table here with the table in the printed output of
-this document.
-
-\begin{table}
-  \caption{Frequency of Special Characters}
-  \label{tab:freq}
-  \begin{tabular}{ccl}
-    \toprule
-    Non-English or Math&Frequency&Comments\\
-    \midrule
-    \O & 1 in 1,000& For Swedish names\\
-    $\pi$ & 1 in 5& Common in math\\
-    \$ & 4 in 5 & Used in business\\
-    $\Psi^2_1$ & 1 in 40,000& Unexplained usage\\
-  \bottomrule
-\end{tabular}
-\end{table}
-
-To set a wider table, which takes up the whole width of the page's
-live area, use the environment \textbf{table*} to enclose the table's
-contents and the table caption.  As with a single-column table, this
-wide table will ``float'' to a location deemed more
-desirable. Immediately following this sentence is the point at which
-Table~\ref{tab:commands} is included in the input file; again, it is
-instructive to compare the placement of the table here with the table
-in the printed output of this document.
-
-\begin{table*}
-  \caption{Some Typical Commands}
-  \label{tab:commands}
-  \begin{tabular}{ccl}
-    \toprule
-    Command &A Number & Comments\\
-    \midrule
-    \texttt{{\char'134}author} & 100& Author \\
-    \texttt{{\char'134}table}& 300 & For tables\\
-    \texttt{{\char'134}table*}& 400& For wider tables\\
-    \bottomrule
-  \end{tabular}
-\end{table*}
-
-\section{Math Equations}
-You may want to display math equations in three distinct styles:
-inline, numbered or non-numbered display.  Each of the three are
-discussed in the next sections.
-
-\subsection{Inline (In-text) Equations}
-A formula that appears in the running text is called an inline or
-in-text formula.  It is produced by the \textbf{math} environment,
-which can be invoked with the usual
-\texttt{{\char'134}begin\,\ldots{\char'134}end} construction or with
-the short form \texttt{\$\,\ldots\$}. You can use any of the symbols
-and structures, from $\alpha$ to $\omega$, available in
-\LaTeX~\cite{Lamport:LaTeX}; this section will simply show a few
-examples of in-text equations in context. Notice how this equation:
-\begin{math}
-  \lim_{n\rightarrow \infty}x=0
-\end{math},
-set here in in-line math style, looks slightly different when
-set in display style.  (See next section).
-
-\subsection{Display Equations}
-A numbered display equation---one set off by vertical space from the
-text and centered horizontally---is produced by the \textbf{equation}
-environment. An unnumbered display equation is produced by the
-\textbf{displaymath} environment.
-
-Again, in either environment, you can use any of the symbols and
-structures available in \LaTeX\@; this section will just give a couple
-of examples of display equations in context.  First, consider the
-equation, shown as an inline equation above:
-\begin{equation}
-  \lim_{n\rightarrow \infty}x=0
-\end{equation}
-Notice how it is formatted somewhat differently in
-the \textbf{displaymath}
-environment.  Now, we'll enter an unnumbered equation:
-\begin{displaymath}
-  \sum_{i=0}^{\infty} x + 1
-\end{displaymath}
-and follow it with another numbered equation:
-\begin{equation}
-  \sum_{i=0}^{\infty}x_i=\int_{0}^{\pi+2} f
-\end{equation}
-just to demonstrate \LaTeX's able handling of numbering.
-
-\section{Citations and Bibliographies}
-
-The use of \BibTeX\ for the preparation and formatting of one's
-references is strongly recommended. Authors' names should be complete
---- use full first names (``Donald E. Knuth'') not initials
-(``D. E. Knuth'') --- and the salient identifying features of a
-reference should be included: title, year, volume, number, pages,
-article DOI, etc.
-
-The bibliography is included in your source document with these two
-commands, placed just before the \verb|\end{document}| command:
-\begin{verbatim}
-  \bibliographystyle{ACM-Reference-Format}
-  \bibliography{bibfile}
-\end{verbatim}
-where ``\verb|bibfile|'' is the name, without the ``\verb|.bib|''
-suffix, of the \BibTeX\ file.
-
-Citations and references are numbered by default. A small number of
-ACM publications have citations and references formatted in the
-``author year'' style; for these exceptions, please include this
-command in the {\bfseries preamble} (before
-``\verb|\begin{document}|'') of your \LaTeX\ source:
-\begin{verbatim}
-  \citestyle{acmauthoryear}
-\end{verbatim}
-
-  Some examples.  A paginated journal article \cite{Abril07}, an
-  enumerated journal article \cite{Cohen07}, a reference to an entire
-  issue \cite{JCohen96}, a monograph (whole book) \cite{Kosiur01}, a
-  monograph/whole book in a series (see 2a in spec. document)
-  \cite{Harel79}, a divisible-book such as an anthology or compilation
-  \cite{Editor00} followed by the same example, however we only output
-  the series if the volume number is given \cite{Editor00a} (so
-  Editor00a's series should NOT be present since it has no vol. no.),
-  a chapter in a divisible book \cite{Spector90}, a chapter in a
-  divisible book in a series \cite{Douglass98}, a multi-volume work as
-  book \cite{Knuth97}, an article in a proceedings (of a conference,
-  symposium, workshop for example) (paginated proceedings article)
-  \cite{Andler79}, a proceedings article with all possible elements
-  \cite{Smith10}, an example of an enumerated proceedings article
-  \cite{VanGundy07}, an informally published work \cite{Harel78}, a
-  doctoral dissertation \cite{Clarkson85}, a master's thesis:
-  \cite{anisi03}, an online document / world wide web resource
-  \cite{Thornburg01, Ablamowicz07, Poker06}, a video game (Case 1)
-  \cite{Obama08} and (Case 2) \cite{Novak03} and \cite{Lee05} and
-  (Case 3) a patent \cite{JoeScientist001}, work accepted for
-  publication \cite{rous08}, 'YYYYb'-test for prolific author
-  \cite{SaeediMEJ10} and \cite{SaeediJETC10}. Other cites might
-  contain 'duplicate' DOI and URLs (some SIAM articles)
-  \cite{Kirschmer:2010:AEI:1958016.1958018}. Boris / Barbara Beeton:
-  multi-volume works as books \cite{MR781536} and \cite{MR781537}. A
-  couple of citations with DOIs:
-  \cite{2004:ITE:1009386.1010128,Kirschmer:2010:AEI:1958016.1958018}. Online
-  citations: \cite{TUGInstmem, Thornburg01, CTANacmart}. Artifacts:
-  \cite{R} and \cite{UMassCitations}.
-
-\section{Acknowledgments}
-
-Identification of funding sources and other support, and thanks to
-individuals and groups that assisted in the research and the
-preparation of the work should be included in an acknowledgment
-section, which is placed just before the reference section in your
-document.
-
-This section has a special environment:
-\begin{verbatim}
-  \begin{acks}
-  ...
-  \end{acks}
-\end{verbatim}
-so that the information contained therein can be more easily collected
-during the article metadata extraction phase, and to ensure
-consistency in the spelling of the section heading.
-
-Authors should not prepare this section as a numbered or unnumbered {\verb|\section|}; please use the ``{\verb|acks|}'' environment.
-
-\section{Appendices}
-
-If your work needs an appendix, add it before the
-``\verb|\end{document}|'' command at the conclusion of your source
-document.
-
-Start the appendix with the ``\verb|appendix|'' command:
-\begin{verbatim}
-  \appendix
-\end{verbatim}
-and note that in the appendix, sections are lettered, not
-numbered. This document has two appendices, demonstrating the section
-and subsection identification method.
-
-\section{SIGCHI Extended Abstracts}
-
-The ``\verb|sigchi-a|'' template style (available only in \LaTeX\ and
-not in Word) produces a landscape-orientation formatted article, with
-a wide left margin. Three environments are available for use with the
-``\verb|sigchi-a|'' template style, and produce formatted output in
-the margin:
-\begin{itemize}
-\item {\verb|sidebar|}:  Place formatted text in the margin.
-\item {\verb|marginfigure|}: Place a figure in the margin.
-\item {\verb|margintable|}: Place a table in the margin.
-\end{itemize}
-
-%%
-%% The acknowledgments section is defined using the "acks" environment
-%% (and NOT an unnumbered section). This ensures the proper
-%% identification of the section in the article metadata, and the
-%% consistent spelling of the heading.
-\begin{acks}
-To Robert, for the bagels and explaining CMYK and color spaces.
-\end{acks}
-
-%%
-%% The next two lines define the bibliography style to be used, and
-%% the bibliography file.
-\bibliographystyle{ACM-Reference-Format}
-\bibliography{sample-base}
-
-%%
-%% If your work has an appendix, this is the place to put it.
-\appendix
-
-\section{Research Methods}
-
-\subsection{Part One}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-malesuada, quam in pulvinar varius, metus nunc fermentum urna, id
-sollicitudin purus odio sit amet enim. Aliquam ullamcorper eu ipsum
-vel mollis. Curabitur quis dictum nisl. Phasellus vel semper risus, et
-lacinia dolor. Integer ultricies commodo sem nec semper.
-
-\subsection{Part Two}
-
-Etiam commodo feugiat nisl pulvinar pellentesque. Etiam auctor sodales
-ligula, non varius nibh pulvinar semper. Suspendisse nec lectus non
-ipsum convallis congue hendrerit vitae sapien. Donec at laoreet
-eros. Vivamus non purus placerat, scelerisque diam eu, cursus
-ante. Etiam aliquam tortor auctor efficitur mattis.
-
-\section{Online Resources}
-
-Nam id fermentum dui. Suspendisse sagittis tortor a nulla mollis, in
-pulvinar ex pretium. Sed interdum orci quis metus euismod, et sagittis
-enim maximus. Vestibulum gravida massa ut felis suscipit
-congue. Quisque mattis elit a risus ultrices commodo venenatis eget
-dui. Etiam sagittis eleifend elementum.
-
-Nam interdum magna at lectus dignissim, ac dignissim lorem
-rhoncus. Maecenas eu arcu ac neque placerat aliquam. Nunc pulvinar
-massa et mattis lacinia.
 
 \end{document}
 \endinput
