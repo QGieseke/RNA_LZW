@@ -232,7 +232,7 @@ In doing a string comparison, RNA-LZW only achieved 38\% accuracy when analyzed 
 
 Our algorithm shows a remarkable first step towards being able to detect pseudoknots in an efficient manner. Being able to build and parse a dictionary of matches that include pseudoknotted structures in linear time leaves time to improve the metrics by which we parse the dictionary to extract matches, while keeping the entire algorithm efficient. 
 
-The first and most obvious place for improvement is on how we currently choose which dictionary entries make it into the final sequence. Currently we rank first by matching length, and then by distance between them. This is an entirely naive approach that still gave us [[RESULT \%]] accuracy against well known structures. Replacing this naive ordering with a well developed free energy calculation allow the algorithm to select more distant or shorter bonds that end up increasing the stability of the final structure more, and therefore are more likely to be seen in nature.
+The first and most obvious place for improvement is on how we currently choose which dictionary entries make it into the final sequence. Currently we rank first by matching length, and then by distance between them. This is an entirely naive approach that still gave us an approximate 45\% accuracy against well known structures. Replacing this naive ordering with a well developed free energy calculation allow the algorithm to select more distant or shorter bonds that end up increasing the stability of the final structure more, and therefore are more likely to be seen in nature.
 
 A second issue is to correct for some artifacts of the LZW algorithm that appear at the start of a sequence. Since the algorithm starts at the first character each loop, and checks against the buffer, the dictionary will never a sequence longer than 2 that starts at the second index, 3 that starts at the 3rd index, and so on. This is a negligable constraint past the first ~50 bases, but could prevent RNA-LZW from finding good matches on small file sizes. To prevent this an additional step of adding all permutations of the first ~50 bases to the dictionary would fully aleviate this issue. However, since this algorithm is primarily indented to work on large RNA sequences, this is a relatively minor improvement.
 
@@ -242,120 +242,8 @@ The most important next step for this algorithm would be to utilize its strength
 
 \section{conclusion}
 
-While RNA-LZW has several immediate restrictions, it represents a step towards being able to predict pseudoknotted structures and long distance stems efficiently, especially in large RNA sequences. As there are currently no other algorithms that achieve this goal, we believe that this is important enough to warrant future attention.  
+While RNA-LZW has several immediate restrictions, it represents a step towards being able to predict pseudoknotted structures and long distance stems efficiently, especially in large RNA sequences. As there are currently no other algorithms that achieve this goal, we believe that this is important enough to warrant future attention. Our preliminary results show that, for a novel and prototype algorithm that does no free energy calculations, we are already able to predict a large number of structures. Since our algorithm is also completely agnostic to the presence of pseudoknots and long-distance structures, its value in reducing computation time for processing long RNA sequences is invaluble. 
 
-\section{Authors and Affiliations}
-
-Each author must be defined separately for accurate metadata
-identification. Multiple authors may share one affiliation. Authors'
-names should not be abbreviated; use full first names wherever
-possible. Include authors' e-mail addresses whenever possible.
-
-Grouping authors' names or e-mail addresses, or providing an ``e-mail
-alias,'' as shown below, is not acceptable:
-\begin{verbatim}
-  \author{Brooke Aster, David Mehldau}
-  \email{dave,judy,steve@university.edu}
-  \email{firstname.lastname@phillips.org}
-\end{verbatim}
-
-The \verb|authornote| and \verb|authornotemark| commands allow a note
-to apply to multiple authors --- for example, if the first two authors
-of an article contributed equally to the work.
-
-If your author list is lengthy, you must define a shortened version of
-the list of authors to be used in the page headers, to prevent
-overlapping text. The following command should be placed just after
-the last \verb|\author{}| definition:
-\begin{verbatim}
-  \renewcommand{\shortauthors}{McCartney, et al.}
-\end{verbatim}
-Omitting this command will force the use of a concatenated list of all
-of the authors' names, which may result in overlapping text in the
-page headers.
-
-The article template's documentation, available at
-\url{https://www.acm.org/publications/proceedings-template}, has a
-complete explanation of these commands and tips for their effective
-use.
-
-\section{Rights Information}
-
-Authors of any work published by ACM will need to complete a rights
-form. Depending on the kind of work, and the rights management choice
-made by the author, this may be copyright transfer, permission,
-license, or an OA (open access) agreement.
-
-Regardless of the rights management choice, the author will receive a
-copy of the completed rights form once it has been submitted. This
-form contains \LaTeX\ commands that must be copied into the source
-document. When the document source is compiled, these commands and
-their parameters add formatted text to several areas of the final
-document:
-\begin{itemize}
-\item the ``ACM Reference Format'' text on the first page.
-\item the ``rights management'' text on the first page.
-\item the conference information in the page header(s).
-\end{itemize}
-
-Rights information is unique to the work; if you are preparing several
-works for an event, make sure to use the correct set of commands with
-each of the works.
-
-\section{CCS Concepts and User-Defined Keywords}
-
-Two elements of the ``acmart'' document class provide powerful
-taxonomic tools for you to help readers find your work in an online
-search.
-
-The ACM Computing Classification System ---
-\url{https://www.acm.org/publications/class-2012} --- is a set of
-classifiers and concepts that describe the computing
-discipline. Authors can select entries from this classification
-system, via \url{https://dl.acm.org/ccs/ccs.cfm}, and generate the
-commands to be included in the \LaTeX\ source.
-
-User-defined keywords are a comma-separated list of words and phrases
-of the authors' choosing, providing a more flexible way of describing
-the research being presented.
-
-CCS concepts and user-defined keywords are required for all short- and
-
-\section{Acknowledgments}
-
-Identification of funding sources and other support, and thanks to
-individuals and groups that assisted in the research and the
-preparation of the work should be included in an acknowledgment
-section, which is placed just before the reference section in your
-document.
-
-This section has a special environment:
-\begin{verbatim}
-  \begin{acks}
-  ...
-  \end{acks}
-\end{verbatim}
-so that the information contained therein can be more easily collected
-during the article metadata extraction phase, and to ensure
-consistency in the spelling of the section heading.
-
-Authors should not prepare this section as a numbered or unnumbered {\verb|\section|}; please use the ``{\verb|acks|}'' environment.
-
-\section{Appendices}
-
-If your work needs an appendix, add it before the
-``\verb|\end{document}|'' command at the conclusion of your source
-document.
-
-Start the appendix with the ``\verb|appendix|'' command:
-\begin{verbatim}
-  \appendix
-\end{verbatim}
-and note that in the appendix, sections are lettered, not
-numbered. This document has two appendices, demonstrating the section
-and subsection identification method.
-
-\section{Research Methods}
 
 \begin{thebibliography}{10}
 	\bibitem{RNAZ2} A. R. Gruber S. Findeiß, S. Washietl, I. L. Hofacker, and P. F. Stadler, “RNAZ 2.0: Improved Noncoding RNA Detection,” Pacific Symposium on Biocomputing, pp. 69–79, 2010. 
