@@ -35,50 +35,6 @@
 % https://www.overleaf.com/read/zzzfqvkmrfzn
 
 %%
-%% \BibTeX command to typeset BibTeX logo in the docs
-\AtBeginDocument{%
-  \providecommand\BibTeX{{%
-    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
-
-%% Rights management information.  This information is sent to you
-%% when you complete the rights form.  These commands have SAMPLE
-%% values in them; it is your responsibility as an author to replace
-%% the commands and values with those provided to you when you
-%% complete the rights form.
-% \setcopyright{acmcopyright}
-% \copyrightyear{2021}
-% \acmYear{2021}
-% \acmDOI{10.1145/1122445.1122456}
-
-%% These commands are for a PROCEEDINGS abstract or paper.
- %\acmConference[Woodstock '18]{Woodstock '18: ACM Symposium on Neural
- %  Gaze Detection}{June 03--05, 2018}{Woodstock, NY}
-% \acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
- %  June 03--05, 2018, Woodstock, NY}
-% \acmPrice{15.00}
- %\acmISBN{978-1-4503-9999-9/18/06}
-
-
-%%
-%% Submission ID.
-%% Use this when submitting an article to a sponsored event. You'll
-%% receive a unique submission ID from the organizers
-%% of the event, and this ID should be used as the parameter to this command.
-%%\acmSubmissionID{123-A56-BU3}
-
-%%
-%% The majority of ACM publications use numbered citations and
-%% references.  The command \citestyle{authoryear} switches to the
-%% "author year" style.
-%%
-%% If you are preparing content for an event
-%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
-%% citations and references.
-%% Uncommenting
-%% the next command will enable that style.
-%%\citestyle{acmauthoryear}
-
-%%
 %% end of the preamble, start of the body of the document source.
 \begin{document}
 
@@ -133,6 +89,9 @@
 
 \maketitle
 
+
+
+
 \section{Introduction}
 Detecting RNA secondary structures is a process which is integral to understanding the functions of non-coding RNA sequences. Though there are existing bioinformatics tools used for detection, these programs are not without their limitations. \\
 Specifically, RNAz uses a sliding window approach in its analysis of a sequence [1], [2], meaning there may be structures with loops existing outside the scope of the window.\\
@@ -165,11 +124,34 @@ RNA\_LZW uses only the encoding step of the LZW compression algorithm.  A high l
 
 
 \subsection{Dot-Bracket Construction}
-
+Once we have the dictionary with many possible base matches, we must remove overlapping matches, and place only the most likely ones into the final output. Currently we measure stem likelihood first by length, and then by distance. The steps are as follows:
 \begin{enumerate}
-\item the algo
+\item Remove impossible matches.
+	\begin{enumerate}
+	\item While adding entries to the dictionary, it is possible to add overlapping matches, where a sequence of bases can be paired with itself. For example, the sequence \texttt{UGAUAGCA} when reversed will exactly pair to itself. 
+	\end{enumerate}
+\item For each dictionary entry, parse the possible match locations and select the pair of base sequences that are the shortest distance apart.
+\item Sort by match length.
+\item Check the location of each stem placement in the output:
+	\begin{enumerate}
+	\item If the location is empty, add the stem to the output, marked by a unique key at every base location along the stem
+	\item If any base in the location already has a stem, skip. Since we iterate from longest stems down to shortest, this biases the algorithm towards including longer stems.
+	\end{enumerate}
 \end{enumerate}
-
+%At this point in the algorithm, the output consists of a unique symbol per stem (The index in the output of the start of the right stem half), that is replicated at each base in the stem. To convert into standard dot-bracket notation, we must essentially reduce the number of bracket symbols down. For the purposes of notating pseudoknots, we use the bracket progression of \texttt{([\{<ABCD} for opening brackets, and \texttt{dcba>\}])} for closing braces.
+This algorithm utilizes a single modified stack in order to match braces as it progresses through the output sequence. The stack is allowed to have "transparent" entries that stay on the stack, but peek and pop operations will return the first non-transparent entry on the stack.
+\begin{enumerate}
+	\item Iterate through the output, left to right.
+		\begin{enumerate}
+		\item If the current value equals the top of the stack, pop the top of the stack. This is equivalent to finding a normal brace match
+		\item If the current value equals the index of the match, and that value is not on top of the stack, then we have a closing bracket with its requisite opening bracket must be beyond the last opening bracket, meaning we have found a pseudoknonot.
+			\begin{itemize}
+			\item Since representing a pseudoknot requires a new style of brace, we iterate through the stack between the opening and closing brace (including transparent entries), seeking out the highest value of brace. We then assign a one higher value of brace to the current pair, and make both entries transparent. 
+			\end{itemize}
+		\item If neither of the above cases are true, we have a normal opening brace. Push current value to the stack.
+		\end{enumerate}
+\end{enumerate}
+Finally, we iterate through the output one more time, converting each unique id into its corresponding brace value, and replacing any gaps with '.'.
 
 \section{results}
 
@@ -207,16 +189,23 @@ Due to the small size of this sequence, RNA\_Z's output is clearly less complete
   \label{fig:telomerase}
 \end{figure}
 
-Figure \ref{fig:telomerase} shows a boat.
+Figure \ref{fig:telomerase} shows a telomerase.
 
 
 \section{discussion}
+%answer the research question, 
+%talk to the strengths of what has been found
+%talk about limitations
+%connect to outside research
 
-The ``\verb|acmart|'' document class requires the use of the
-``Libertine'' typeface family. Your \TeX\ installation should include
-this set of packages. Please do not substitute other typefaces. The
-``\verb|lmodern|'' and ``\verb|ltimes|'' packages should not be used,
-as they will override the built-in typeface families.
+Our algorithm shows a remarkable first step towards being able to detect pseudoknots in an efficient manner. Being able to build and parse a dictionary of matches that include pseudoknotted structures in linear time leaves time to improve the metrics by which we parse the dictionary to extract matches, while keeping the entire algorithm efficient. 
+
+The first and most obvious place for improvement is on how we currently choose which dictionary entries make it into the final sequence. Currently we rank first by matching length, and then by distance between them. This is an entirely naive approach that still gave us [[RESULT \%]] accuracy against well known structures. Replacing this naive ordering with a well developed free energy calculation allow the algorithm to select more distant or shorter bonds that end up increasing the stability of the final structure more, and therefore are more likely to be seen in nature.
+
+A second issue is to correct for some artifacts of the LZW algorithm that appear at the start of a sequence. Since the algorithm starts at the first character each loop, and checks against the buffer, the dictionary will never a sequence longer than 2 that starts at the second index, 3 that starts at the 3rd index, and so on. This is a negligable constraint past the first ~50 bases, but could prevent RNA\_LZW from finding good matches on small file sizes. To prevent this an additional step of adding all permutations of the first ~50 bases to the dictionary would fully aleviate this issue. However, since this algorithm is primarily indented to work on large RNA sequences, this is a relatively minor improvement.
+
+The most important next step for this algorithm would be to utilize its strengths of finding likely matches and pseudoknots across arbitrary distances in order to inform more tranditional folding algorithms. By pipelining the output of RNA\_LZW into these more developed algorithms, they can build likely pseudoknotted structures without having to overcome the NP-Complete barrier of having to parse the entire sequence. This is an important step towards being able to efficiently predict the secondary structures of large non-coding RNA sequences. 
+
 
 \section{conclusion}
 
@@ -429,7 +418,7 @@ just to demonstrate \LaTeX's able handling of numbering.
 
 \section{Citations and Bibliographies}
 
-The use of \BibTeX\ for the preparation and formatting of one's
+The use of or the preparation and formatting of one's
 references is strongly recommended. Authors' names should be complete
 --- use full first names (``Donald E. Knuth'') not initials
 (``D. E. Knuth'') --- and the salient identifying features of a
@@ -443,7 +432,7 @@ commands, placed just before the \verb|\end{document}| command:
   \bibliography{bibfile}
 \end{verbatim}
 where ``\verb|bibfile|'' is the name, without the ``\verb|.bib|''
-suffix, of the \BibTeX\ file.
+suffix, of th.
 
 Citations and references are numbered by default. A small number of
 ACM publications have citations and references formatted in the
