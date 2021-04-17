@@ -75,10 +75,16 @@
 
 
 \section{Introduction}
-Detecting RNA secondary structures is a process which is integral to understanding the functions of non-coding RNA sequences. Though there are existing bioinformatics tools used for detection, these programs are not without their limitations. \\
-Specifically, RNAz uses a sliding window approach in its analysis of a sequence [1], [2], meaning there may be structures with loops existing outside the scope of the window.\\
-The Lempel-Ziv-Welch (LZW) algorithm is a universal lossless compression algorithm used for a variety of applications such as Unix file compression. The algorithm compresses data by using a dictionary to assign common sequences of characters to a fixed-length code (typically 12-bit) [3].\\
-Because RNA structure exists in a 3-dimensional capacity, with its final form assuming a tertiary structure, base pairings which may appear to be distant from one another in a secondary structure can in reality exist very closely to one another once their tertiary structure is assumed. Given the LZW algorithm’s dictionary approach to pattern-matching,  RNA\_LZW can detect the presence of distant pseudoknots in a structure in much the same way that it detects regular base pairing. \\
+Detecting RNA secondary structures is a process which is integral to understanding the functions of non-coding RNA sequences. Though there are existing bioinformatics tools used for detection, these programs are not without their limitations. 
+
+Specifically, RNAz uses a sliding window approach in its analysis of a sequence \cite{RNAZ2} \cite{Fast}, meaning there may be structures with loops existing outside the scope of the window.
+
+Additionally, it has been proven that utilizing current mimimum free energy calculations for the purposes of predicting pseudoknotted structures is NP-Complete \cite{NP}
+
+The Lempel-Ziv-Welch (LZW) algorithm is a universal lossless compression algorithm used for a variety of applications such as Unix file compression. The algorithm compresses data by using a dictionary to assign common sequences of characters to a fixed-length code (typically 12-bit) \cite{compres}.
+
+Because RNA structure exists in a 3-dimensional capacity, with its final form assuming a tertiary structure, base pairings which may appear to be distant from one another in a secondary structure can in reality exist very closely to one another once their tertiary structure is assumed. Given the LZW algorithm’s dictionary approach to pattern-matching,  RNA\_LZW can detect the presence of distant pseudoknots in a structure in much the same way that it detects regular base pairing. 
+
 We propose that RNA\_LZW could serve as a pre-processing step to determine if there are notable base pairings throughout a given sequence, which may not be accounted for by standard secondary structure detection methods.
 
 \section{algorithms}
@@ -118,7 +124,7 @@ Once we have the dictionary with many possible base matches, we must remove over
 	\end{enumerate}
 \end{enumerate}
 
-At this point in the algorithm, the output consists of a unique symbol per stem (The index in the output of the start of the right stem half), that is replicated at each base in the stem. To convert into standard dot-bracket notation, we must essentially reduce the number of bracket symbols down. For the purposes of notating pseudoknots, we use the bracket progression of \texttt{([\{<ABCD} for opening brackets, and \texttt{dcba>\}])} for closing braces.
+At this point in the algorithm, the output consists of a unique symbol per stem (The index in the output of the start of the right stem half), that is replicated at each base in the stem. To convert into standard dot-bracket notation, we must essentially reduce the number of bracket symbols down. For the purposes of notating pseudoknots, we use the bracket progression of \verb|{([{<ABCD| for opening brackets, and \verb|dcba>}])| for closing braces.
 This algorithm utilizes a single modified stack in order to match braces as it progresses through the output sequence. The stack is allowed to have "transparent" entries that stay on the stack, but peek and pop operations will return the first non-transparent entry on the stack.
 \begin{enumerate}
 	\item Iterate through the output, left to right.
@@ -131,7 +137,7 @@ This algorithm utilizes a single modified stack in order to match braces as it p
 		\item If neither of the above cases are true, we have a normal opening brace. Push current value to the stack.
 		\end{enumerate}
 \end{enumerate}
-Finally, we iterate through the output one more time, converting each unique id into its corresponding brace value, and replacing any gaps with '.'.
+Finally, we iterate through the output one more time, converting each unique id into its corresponding brace value, and replacing any gaps with the '.' character.
 
 
 \section{results}
@@ -171,7 +177,7 @@ Due to the small size of this sequence, RNA\_Z's output is clearly different fro
 
 \subsection{Homo sapiens telomerase RNA}
 
-Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function [5].  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.\\
+Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function \cite{ncbi}.  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.\\
 Though the length of the sequence (450 nucleotides) means that visual comparison shown in Table \ref{tab:telomerase} is difficult for the reader to assess. When doing a comparison of string similarity, RNA\_Z achieves 51\% accuracy.
 
 \begin{figure}
@@ -467,35 +473,6 @@ command in the {\bfseries preamble} (before
   \citestyle{acmauthoryear}
 \end{verbatim}
 
-  Some examples.  A paginated journal article \cite{Abril07}, an
-  enumerated journal article \cite{Cohen07}, a reference to an entire
-  issue \cite{JCohen96}, a monograph (whole book) \cite{Kosiur01}, a
-  monograph/whole book in a series (see 2a in spec. document)
-  \cite{Harel79}, a divisible-book such as an anthology or compilation
-  \cite{Editor00} followed by the same example, however we only output
-  the series if the volume number is given \cite{Editor00a} (so
-  Editor00a's series should NOT be present since it has no vol. no.),
-  a chapter in a divisible book \cite{Spector90}, a chapter in a
-  divisible book in a series \cite{Douglass98}, a multi-volume work as
-  book \cite{Knuth97}, an article in a proceedings (of a conference,
-  symposium, workshop for example) (paginated proceedings article)
-  \cite{Andler79}, a proceedings article with all possible elements
-  \cite{Smith10}, an example of an enumerated proceedings article
-  \cite{VanGundy07}, an informally published work \cite{Harel78}, a
-  doctoral dissertation \cite{Clarkson85}, a master's thesis:
-  \cite{anisi03}, an online document / world wide web resource
-  \cite{Thornburg01, Ablamowicz07, Poker06}, a video game (Case 1)
-  \cite{Obama08} and (Case 2) \cite{Novak03} and \cite{Lee05} and
-  (Case 3) a patent \cite{JoeScientist001}, work accepted for
-  publication \cite{rous08}, 'YYYYb'-test for prolific author
-  \cite{SaeediMEJ10} and \cite{SaeediJETC10}. Other cites might
-  contain 'duplicate' DOI and URLs (some SIAM articles)
-  \cite{Kirschmer:2010:AEI:1958016.1958018}. Boris / Barbara Beeton:
-  multi-volume works as books \cite{MR781536} and \cite{MR781537}. A
-  couple of citations with DOIs:
-  \cite{2004:ITE:1009386.1010128,Kirschmer:2010:AEI:1958016.1958018}. Online
-  citations: \cite{TUGInstmem, Thornburg01, CTANacmart}. Artifacts:
-  \cite{R} and \cite{UMassCitations}.
 
 \section{Acknowledgments}
 
@@ -568,17 +545,14 @@ To Robert, for the bagels and explaining CMYK and color spaces.
 \subsection{Part One}
 
 \section{bibliography}
-
-[1] A. R. Gruber S. Findeiß, S. Washietl, I. L. Hofacker, and P. F. Stadler, “RNAZ 2.0: Improved Noncoding RNA Detection,” Pacific Symposium on Biocomputing, pp. 69–79, 2010. 
-
-[2] S. Washietl, I. L. Hofacker, and P. F. Stadler, “Fast and Reliable Prediction of Noncoding RNAs,” Proceedings of the National Academy of Sciences, vol. 102 (7), pp. 2454–2459, 2005.  
-
-[3] T. A. Welch, "A Technique for High-Performance Data Compression," in Computer, vol. 17, no. 6, pp. 8-19, June 1984, doi: 10.1109/MC.1984.1659158.
-
-[4] I. L. Hofacker, S. Bonhoeffer, P. F. Stadler, R. Lorenz, and W. Fontana, “RNAfold manual page for RNAfold 2.4.16,” Theoretical Biochemistry Group. [Online]. Available: \url{https://www.tbi.univie.ac.at/RNA/RNAfold.1.html#heading7}. [Accessed: 21-Feb-2021]. 
-
-[5] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC21964/
-
+\begin{thebibliography}{10}
+	\bibitem{RNAZ2} A. R. Gruber S. Findeiß, S. Washietl, I. L. Hofacker, and P. F. Stadler, “RNAZ 2.0: Improved Noncoding RNA Detection,” Pacific Symposium on Biocomputing, pp. 69–79, 2010. 
+	\bibitem{Fast} S. Washietl, I. L. Hofacker, and P. F. Stadler, “Fast and Reliable Prediction of Noncoding RNAs,” Proceedings of the National Academy of Sciences, vol. 102 (7), pp. 2454–2459, 2005.  
+	\bibitem{compres} T. A. Welch, "A Technique for High-Performance Data Compression," in Computer, vol. 17, no. 6, pp. 8-19, June 1984, doi: 10.1109/MC.1984.1659158.
+	\bibitem{RNAFold} I. L. Hofacker, S. Bonhoeffer, P. F. Stadler, R. Lorenz, and W. Fontana, “RNAfold manual page for RNAfold 2.4.16,” Theoretical Biochemistry Group. [Online]. Available: \url{https://www.tbi.univie.ac.at/RNA/RNAfold.1.html#heading7}. [Accessed: 21-Feb-2021]. 
+	\bibitem{ncbi} https://www.ncbi.nlm.nih.gov/pmc/articles/PMC21964/
+	\bibitem{NP} Lyngsø, Rune and Pedersen, Christian. (2000). RNA Pseudoknot Prediction in Energy-Based Models. Journal of computational biology : a journal of computational molecular cell biology. 7. 409-27. 10.1089/106652700750050862. 
+\end{thebibliography}
 
 \end{document}
 \endinput
