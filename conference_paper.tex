@@ -23,7 +23,7 @@
 %%
 %% The first command in your LaTeX source must be the \documentclass command.
 \documentclass[sigconf]{acmart}
-
+\usepackage{indentfirst}
 %%%% As of March 2017, [siggraph] is no longer used. Please use sigconf (above) for SIGGRAPH conferences.
 
 %%%% Proceedings format for SIGPLAN conferences 
@@ -75,10 +75,14 @@
 
 
 \section{Introduction}
-Detecting RNA secondary structures is a process which is integral to understanding the functions of non-coding RNA sequences. Though there are existing bioinformatics tools used for detection, these programs are not without their limitations. \\
-Specifically, RNAz uses a sliding window approach in its analysis of a sequence [1], [2], meaning there may be structures with loops existing outside the scope of the window.\\
-The Lempel-Ziv-Welch (LZW) algorithm is a universal lossless compression algorithm used for a variety of applications such as Unix file compression. The algorithm compresses data by using a dictionary to assign common sequences of characters to a fixed-length code (typically 12-bit) [3].\\
-Because RNA structure exists in a 3-dimensional capacity, with its final form assuming a tertiary structure, base pairings which may appear to be distant from one another in a secondary structure can in reality exist very closely to one another once their tertiary structure is assumed. Given the LZW algorithm’s dictionary approach to pattern-matching,  RNA\_LZW can detect the presence of distant pseudoknots in a structure in much the same way that it detects regular base pairing. \\
+Detecting RNA secondary structures is a process which is integral to understanding the functions of non-coding RNA sequences. Though there are existing bioinformatics tools used for detection, these programs are not without their limitations. 
+
+Specifically, RNAz uses a sliding window approach in its analysis of a sequence [1], [2], meaning there may be structures with loops existing outside the scope of the window.
+
+The Lempel-Ziv-Welch (LZW) algorithm is a universal lossless compression algorithm used for a variety of applications such as Unix file compression. The algorithm compresses data by using a dictionary to assign common sequences of characters to a fixed-length code (typically 12-bit) [3].
+
+Because RNA structure exists in a 3-dimensional capacity, with its final form assuming a tertiary structure, base pairings which may appear to be distant from one another in a secondary structure can in reality exist very closely to one another once their tertiary structure is assumed. Given the LZW algorithm’s dictionary approach to pattern-matching,  RNA\_LZW can detect the presence of distant pseudoknots in a structure in much the same way that it detects regular base pairing. 
+
 We propose that RNA\_LZW could serve as a pre-processing step to determine if there are notable base pairings throughout a given sequence, which may not be accounted for by standard secondary structure detection methods.
 
 \section{algorithms}
@@ -119,6 +123,7 @@ Once we have the dictionary with many possible base matches, we must remove over
 \end{enumerate}
 
 At this point in the algorithm, the output consists of a unique symbol per stem (The index in the output of the start of the right stem half), that is replicated at each base in the stem. To convert into standard dot-bracket notation, we must essentially reduce the number of bracket symbols down. For the purposes of notating pseudoknots, we use the bracket progression of \texttt{([\{<ABCD} for opening brackets, and \texttt{dcba>\}])} for closing braces.
+
 This algorithm utilizes a single modified stack in order to match braces as it progresses through the output sequence. The stack is allowed to have "transparent" entries that stay on the stack, but peek and pop operations will return the first non-transparent entry on the stack.
 \begin{enumerate}
 	\item Iterate through the output, left to right.
@@ -131,6 +136,7 @@ This algorithm utilizes a single modified stack in order to match braces as it p
 		\item If neither of the above cases are true, we have a normal opening brace. Push current value to the stack.
 		\end{enumerate}
 \end{enumerate}
+
 Finally, we iterate through the output one more time, converting each unique id into its corresponding brace value, and replacing any gaps with '.'.
 
 
@@ -147,8 +153,10 @@ In order to test for RNA\_LZW's efficacy as a preprocessing(?) step in identifyi
   \label{fig:tRNA}
 \end{figure}
 
-As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a good benchmark to visualize whether RNA\_LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery. \\
-Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure.  In the case of this tRNA sequence,  RNA\_Z achieves 71\% accuracy when doing a string comparison to the known dot-bracket structure. \\
+As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a good benchmark to visualize whether RNA\_LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery. 
+
+Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure.  In the case of this tRNA sequence,  RNA\_Z achieves 71\% accuracy when doing a string comparison to the known dot-bracket structure. 
+
 Due to the small size of this sequence, RNA\_Z's output is clearly different from the known structure, but the hypothesis that RNA\_Z is capable of matching base pairs from any range in the structure, is supported by the output generated from this sequence. 
 
 \begin{table}
@@ -171,7 +179,8 @@ Due to the small size of this sequence, RNA\_Z's output is clearly different fro
 
 \subsection{Homo sapiens telomerase RNA}
 
-Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function [5].  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.\\
+Telomerase is a ribonucleoprotein, meaning that it is a complex structure comprised of non-coding RNA and a protein binding to one another. Telomerase RNA contains a pseudoknot which is integral to telomerase's function [5].  Figure \ref{fig:telomerase} helps visualize how these pseudoknots appear in nature.
+
 Though the length of the sequence (450 nucleotides) means that visual comparison shown in Table \ref{tab:telomerase} is difficult for the reader to assess. When doing a comparison of string similarity, RNA\_Z achieves 51\% accuracy.
 
 \begin{figure}
