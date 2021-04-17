@@ -39,7 +39,7 @@
 %% end of the preamble, start of the body of the document source.
 \begin{document}
 
-\title{RNA\_LZW: A Novel Method for Detection of Stems and Pseudoknotted Structures in Non-Coding RNA}
+\title{RNA-LZW: A Novel Method for Detection of Stems and Pseudoknotted Structures in Non-Coding RNA}
 
 \author{Claire Champernowne}
 \email{cchampernowne@gmail.com}
@@ -79,20 +79,20 @@ Detecting RNA secondary structures is a process which is integral to understandi
 
 Specifically, RNAz uses a sliding window approach in its analysis of a sequence \cite{RNAZ2} \cite{Fast}, meaning there may be structures with loops existing outside the scope of the window.
 
-Additionally, it has been proven that utilizing current mimimum free energy calculations for the purposes of predicting pseudoknotted structures is NP-Complete \cite{NP}
+Additionally, it has been proven that utilizing current mimimum free energy calculations for the purposes of predicting pseudoknotted structures is an NP-Complete problem \cite{NP}.
 
-The Lempel-Ziv-Welch (LZW) algorithm is a universal lossless compression algorithm used for a variety of applications such as Unix file compression. The algorithm compresses data by using a dictionary to assign common sequences of characters to a fixed-length code (typically 12-bit) \cite{compres}.
+In order to overcome both these hurdles, we utilize the Lempel-Ziv-Welch (LZW) algorithm, which is a universal lossless compression algorithm used for a variety of applications such as Unix file compression. The algorithm compresses data by using a dictionary to assign common sequences of characters to a fixed-length code (typically 12-bit) \cite{compres}.
 
-Because RNA structure exists in a 3-dimensional capacity, with its final form assuming a tertiary structure, base pairings which may appear to be distant from one another in a secondary structure can in reality exist very closely to one another once their tertiary structure is assumed. Given the LZW algorithm’s dictionary approach to pattern-matching,  RNA\_LZW can detect the presence of distant pseudoknots in a structure in much the same way that it detects regular base pairing. 
+Because RNA structure exists in a 3-dimensional capacity, with its final form assuming a tertiary structure, base pairings which may appear to be distant from one another in a secondary structure can in reality exist very closely to one another once their tertiary structure is assumed. Given the LZW algorithm’s dictionary approach to pattern-matching,  RNA-LZW can detect the presence of distant pseudoknots in a structure in much the same way that it detects regular base pairing. 
 
-We propose that RNA\_LZW could serve as a pre-processing step to determine if there are notable base pairings throughout a given sequence, which may not be accounted for by standard secondary structure detection methods.
+We propose that RNA-LZW could serve as a pre-processing step to determine if there are notable base pairings throughout a given sequence, which may not be accounted for by standard secondary structure detection methods.
 
 \section{algorithms}
 
 
 \subsection{Lempel-Ziv-Welch Encoding}
 
-RNA\_LZW uses only the encoding step of the LZW compression algorithm.  A high level overview of the encoding portion of the LZW algorithm as employed in RNA\_LZW is shown below:
+RNA-LZW uses only the encoding step of the LZW compression algorithm.  A high level overview of the encoding portion of the LZW algorithm as employed in RNA\_LZW is shown below:
 
 \begin{enumerate}
 \item Initialize the dictionary to contain all keys of length one. 
@@ -104,7 +104,7 @@ RNA\_LZW uses only the encoding step of the LZW compression algorithm.  A high l
 	\begin{enumerate}
 		\item Though not represented in a normal LZW algorithm, RNZ\_LZW records additional metadata about the position of the buffer in the greater sequence into the dictionary.
 	\end{enumerate}
-\item Though LZW encoding normally cannot iterate multiple times due to its need to be decoded without the dictionary; RNA\_LZW acts with global information, and does not have that restriction, and therefore uses multiple iterations to build a much more robust dictionary.
+\item Though LZW encoding normally cannot iterate multiple times due to its need to be decoded without the dictionary; RNA-LZW acts with global information, and does not have that restriction, and therefore uses multiple iterations to build a much more robust dictionary.
 \end{enumerate}
 
 
@@ -145,7 +145,7 @@ Finally, we iterate through the output one more time, converting each unique id 
 
 \section{results}
 
-In order to test for RNA\_LZW's efficacy as a preprocessing(?) step in identifying potentially relevant stems and pseudoknots in a given structure, it was tested using sequences where the secondary structure is known.  All sequences used were sourced from the RNACentral database. The dot-bracket notations of these known sequences were then compared to the dot-bracket output generated by RNA\_LZW both visually and using a \% similarity string comparison. It should also be noted that RNA\_LZW does not, in its current state, take wobble base pairing into account and is therefore incapable of finding the exact base pairings that occur in the known dot-bracket structures. 
+In order to test for RNA-LZW's efficacy as a preprocessing(?) step in identifying potentially relevant stems and pseudoknots in a given structure, it was tested using sequences where the secondary structure is known.  All sequences used were sourced from the RNACentral database. The dot-bracket notations of these known sequences were then compared to the dot-bracket output generated by RNA\_LZW both visually and using a \% similarity string comparison. It should also be noted that RNA\_LZW does not, in its current state, take wobble base pairing into account and is therefore incapable of finding the exact base pairings that occur in the known dot-bracket structures. 
 
 
 \subsection{Homo sapiens tRNA-SeC (anticodon TCA) 1-1 (TRU-TCA1-1)}
@@ -156,7 +156,7 @@ In order to test for RNA\_LZW's efficacy as a preprocessing(?) step in identifyi
   \label{fig:tRNA}
 \end{figure}
 
-As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a good benchmark to visualize whether RNA\_LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery. 
+As seen in Figure \ref{fig:tRNA},  tRNAs are short sequences which serve as a good benchmark to visualize whether RNA-LZW is capable of outputting structures that are at all similar to those obtained by tried and true methods of RNA secondary structure discovery. 
 
 Clearly RNA\_Z cannot serve as a replacement for more accurate methods of secondary structure construction; however, the output in Table \ref{tab:tRNA} shows that RNA\_Z is capable of producing somewhat similar structural features to a known dot-bracket structure.  In the case of this tRNA sequence,  RNA\_Z achieves 71\% accuracy when doing a string comparison to the known dot-bracket structure.  This is a quite promising result, especially given RNA\_Z's inability to account for wobble base pairing.
 
@@ -171,7 +171,7 @@ Due to the small size of this sequence, we can see that RNA\_Z's output is clear
     AACCUGUAGCUGUCUAGCGACAGAGUGGUUCAAUUCCA\\
     CCUUUCGGGCG\\
     \midrule
-    \textbf{RNA\_LZW Output}\\
+    \textbf{RNA-LZW Output}\\
 	(((((..(((...))).............((((....((())))...(((((....))))).((((.......)))).)))))))).\\
     \midrule 
     \textbf{Known Dot-Bracket Structure}\\
@@ -199,7 +199,7 @@ Though the length of the sequence (450 nucleotides) means that visual comparison
   \begin{tabular}{l}
     \textbf{Sequence}\\
     \midrule
-    \textbf{RNA\_LZW Output}\\
+    \textbf{RNA-LZW Output}\\
     (((((........(((((...(((((((.((((((.(((((((((..))))).....((((((.....(((((.......(((((((.((((((((...\\
     (((((.((((((...))))))....))))).....((((((.)))))................)))))))))))))))..((((.))))..((((((.))\\
     )))))....((((((((((..)))....)))))((((((((.(((((........((((((......))))))))))).......((((...))))))\\
@@ -218,7 +218,7 @@ Though the length of the sequence (450 nucleotides) means that visual comparison
 \subsection{Homo sapiens RNA, 28S ribosomal N1 (RNA28SN1)}
 
 Ribosomal ribonucleic acid is a primary component of ribosomes which carries out protein synthesis. Thus, rRNA is a prime candidate for testing of larger sequences (5,066 nucleotides). 
-In doing a string comparison, RNA\_LZW only achieved 38\% accuracy when analyzed against the known secondary structure.  This low accuracy seems more reasonable once we take into account the lack of wobble base pairing in RNA\_Z's dot bracket structure.  
+In doing a string comparison, RNA-LZW only achieved 38\% accuracy when analyzed against the known secondary structure.  This low accuracy seems more reasonable once we take into account the lack of wobble base pairing in RNA\_Z's dot bracket structure.  
 
 \begin{figure}
   \includegraphics[width=\linewidth]{for_paper2.png}
@@ -237,26 +237,15 @@ Our algorithm shows a remarkable first step towards being able to detect pseudok
 
 The first and most obvious place for improvement is on how we currently choose which dictionary entries make it into the final sequence. Currently we rank first by matching length, and then by distance between them. This is an entirely naive approach that still gave us [[RESULT \%]] accuracy against well known structures. Replacing this naive ordering with a well developed free energy calculation allow the algorithm to select more distant or shorter bonds that end up increasing the stability of the final structure more, and therefore are more likely to be seen in nature.
 
-A second issue is to correct for some artifacts of the LZW algorithm that appear at the start of a sequence. Since the algorithm starts at the first character each loop, and checks against the buffer, the dictionary will never a sequence longer than 2 that starts at the second index, 3 that starts at the 3rd index, and so on. This is a negligable constraint past the first ~50 bases, but could prevent RNA\_LZW from finding good matches on small file sizes. To prevent this an additional step of adding all permutations of the first ~50 bases to the dictionary would fully aleviate this issue. However, since this algorithm is primarily indented to work on large RNA sequences, this is a relatively minor improvement.
+A second issue is to correct for some artifacts of the LZW algorithm that appear at the start of a sequence. Since the algorithm starts at the first character each loop, and checks against the buffer, the dictionary will never a sequence longer than 2 that starts at the second index, 3 that starts at the 3rd index, and so on. This is a negligable constraint past the first ~50 bases, but could prevent RNA-LZW from finding good matches on small file sizes. To prevent this an additional step of adding all permutations of the first ~50 bases to the dictionary would fully aleviate this issue. However, since this algorithm is primarily indented to work on large RNA sequences, this is a relatively minor improvement.
 
-The most important next step for this algorithm would be to utilize its strengths of finding likely matches and pseudoknots across arbitrary distances in order to inform more tranditional folding algorithms. By pipelining the output of RNA\_LZW into these more developed algorithms, they can build likely pseudoknotted structures without having to overcome the NP-Complete barrier of having to parse the entire sequence. This is an important step towards being able to efficiently predict the secondary structures of large non-coding RNA sequences. 
+The most important next step for this algorithm would be to utilize its strengths of finding likely matches and pseudoknots across arbitrary distances in order to inform more tranditional folding algorithms. By pipelining the output of RNA-LZW into these more developed algorithms, they can build likely pseudoknotted structures without having to overcome the NP-Complete barrier of having to parse the entire sequence. This is an important step towards being able to efficiently predict the secondary structures of large non-coding RNA sequences. 
 
 
 
 \section{conclusion}
 
-The title of your work should use capital letters appropriately -
-\url{https://capitalizemytitle.com/} has useful rules for
-capitalization. Use the {\verb|title|} command to define the title of
-your work. If your work has a subtitle, define it with the
-{\verb|subtitle|} command.  Do not insert line breaks in your title.
-
-If your title is lengthy, you must define a short version to be used
-in the page headers, to prevent overlapping text. The \verb|title|
-command has a ``short title'' parameter:
-\begin{verbatim}
-  \title[short title]{full title}
-\end{verbatim}
+While RNA-LZW
 
 \section{Authors and Affiliations}
 
