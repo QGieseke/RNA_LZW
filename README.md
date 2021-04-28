@@ -83,13 +83,14 @@ Clearly, RNA-LZW cannot serve as a replacement for more accurate methods of seco
 
 Due to the small size of this sequence, we can see that RNA-LZW's output is clearly different from the known structure, but the hypothesis that RNA-LZW is capable of matching base pairs from any range in the structure is supported by the output generated from this sequence. 
 
-**GCCCGGAUGAUCCUCAGUGGUCUGGGGUGCAGGCUUCA
-AACCUGUAGCUGUCUAGCGACAGAGUGGUUCAAUUCCA
-CCUUUCGGGCG**
+**GCCCGGAUGAUCCUCAGUGGUCUGGGGUGCAGGCUUCAAACCUGUAGCUGUCUAGCGACAGAGUGGUUCAAUUCCACCUUUCGGGCG**
 
 RNA-LZW Output:
+
 `(((((..(((...))).............((((....((())))...(((((....))))).((((.......)))).)))))))).`
+
 Known Dot-Bracket Structure:
+
 `(((((((.(..((((((....))))))((((((.......)))))).(((((....))))).((((.......))))).))))))).`
 
 
@@ -103,8 +104,11 @@ The length of the sequence (450 nucleotides) makes the visual comparison shown i
 
 
 RNA-LZW Output
+
 `(((((........(((((...(((((((.((((((.(((((((((..))))).....((((((.....(((((.......(((((((.((((((((...(((((.((((((...))))))....))))).....((((((.)))))................)))))))))))))))..((((.))))..((((((.)))))))....((((((((((..)))....)))))((((((((.(((((........((((((......))))))))))).......((((...))))))....((((....)))).....)))))).....)))))))).......)))).))))))..((((())))))).....))))))..(((((((..))))))))........)))))....((((..((()))))))))))))............` 
+
 Known Dot-Bracket Structure
+
 `.................((((((((((((((.(((((........................................(((((.......(((((((((................)))))))))..))))).......................................................)))))...))))))))))))))..(((((((......((((((((..(((((((..(((((........(((((.((((..(((...............)))...))))))))).((((....)))).......)))))....)))))))...))))).)))..............)))))))..........(((((((((((........(((((..((((........))))..)))))..))))))).))))........`
 
 
