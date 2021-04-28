@@ -120,6 +120,17 @@ Ribosomal ribonucleic acid is a primary component of ribosomes which carry out p
 In doing a string comparison, RNA-LZW only achieved 38% accuracy when analyzed against the known secondary structure.  This low accuracy seems more reasonable once we take into account the lack of wobble base pairing in RNA-LZW's dot bracket structure.  
 
 
+### Runtime Efficiency
+
+The overall algorithm is currently O(n) time complexity, assuming that the implementation of the python Dictionary structure is O(1) for lookups and insertions. While this is efficient, the speed of the algorithm is still limited as the base LZW algorithm is not condusive to multi-threading.
+
+Despite this, the following runtimes were found on a single thread of an i5-3470:
+- ~350k : 27m 43s
+- ~210k : 10m 19s
+- ~100k :  2m 36s
+- ~50k  :     38s
+
+All fasta files sourced from RNAcentral.
 
 ## Discussion
 Our algorithm shows a remarkable first step towards being able to detect pseudoknots in an efficient manner. Being able to build and parse a dictionary of matches that include pseudoknotted structures in linear time is valuable. It leaves resources free to improve the metrics by which we parse the dictionary to extract matches, while keeping the entire algorithm efficient. 
